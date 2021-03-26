@@ -1,0 +1,10 @@
+.DS_Store
+*.js
+*.js.map
+**/node_modules
+package/**/*.d.ts
+demos/**/hooks
+demos/**/platforms
+!demos/**/*.js
+*.aar
+.vscode

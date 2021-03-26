@@ -1,5 +1,5 @@
 {
-    "name": "nativescript-in-app-purchase",
+    "name": "nativescript-iap",
     "version": "7.0.0",
     "description": "A NativeScript plugin for making in-app purchases",
     "nativescript": {
@@ -10,7 +10,7 @@
     },
     "repository": {
         "type": "git",
-        "url": "https://github.com/PackagedCat/nativescript-in-app-purchase"
+        "url": "https://github.com/PackagedCat/nativescript-iap"
     },
     "scripts": {
         "clean": "git clean -f -X -d",

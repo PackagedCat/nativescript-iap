@@ -36,7 +36,7 @@
 </template>
 
 <script lang="ts">
-import inAppPurchase, { PurchaseEventData, TransactionState } from 'nativescript-in-app-purchase';
+import inAppPurchase, { PurchaseEventData, TransactionState } from 'nativescript-iap';
 export default {
     data() {
         return {

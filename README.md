@@ -3,7 +3,7 @@ A NativeScript plugin for making in-app purchases.
 ## Installation
 Run the following command from the root of your project:
 
-`ns plugin add nativescript-in-app-purchase`
+`ns plugin add nativescript-iap`
 
 ## Configuration
 In order for your in-app purchases to be recognized by the plugin, you must configure those on the Google/AppStore side.
@@ -13,7 +13,7 @@ In order for your in-app purchases to be recognized by the plugin, you must conf
 ### Setup hook
 Before starting purchase you need hook up to the `purchaseUpdated` event. This way you will receive information about the transaction state while it is executing and take necessary action when the transaction completes. You can set the hook once as global handler to process the all incoming purchases.
 ```typescript
-import inAppPurchase, { PurchaseEventData } from "nativescript-in-app-purchase";
+import inAppPurchase, { PurchaseEventData } from "nativescript-iap";
 
 inAppPurchase.on("purchaseUpdated", async (data: PurchaseEventData) => {
     for (const transaction of data.transactions) {
@@ -34,7 +34,7 @@ inAppPurchase.on("purchaseUpdated", async (data: PurchaseEventData) => {
 ### Getting the products
 To get the actual products call `getProducts` with array of the products identifiers (in Google Play products ID calls SKU):
 ```typescript
-import inAppPurchase from "nativescript-in-app-purchase";
+import inAppPurchase from "nativescript-iap";
 
 const products = await inAppPurchase.getProducts(["your.product.id", "your.product.id"]);
 ```
@@ -42,7 +42,7 @@ const products = await inAppPurchase.getProducts(["your.product.id", "your.produ
 ### Purchasing the product
 
 ```typescript
-import inAppPurchase from "nativescript-in-app-purchase";
+import inAppPurchase from "nativescript-iap";
 
 try {
     await inAppPurchase.purchase(product);
@@ -53,14 +53,14 @@ try {
 
 ### Restoring the purchased products
 ```typescript
-import inAppPurchase from "nativescript-in-app-purchase";
+import inAppPurchase from "nativescript-iap";
 // All restored purchases will be handled by the "purchaseUpdated" hook.
 await inAppPurchase.restorePurchases();
 ```
 
 ### Showing the price consent dialog
 ```typescript
-import inAppPurchase from "nativescript-in-app-purchase";
+import inAppPurchase from "nativescript-iap";
 
 // Pass product required only on Android
 let product = undefined;

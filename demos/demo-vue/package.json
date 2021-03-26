@@ -9,7 +9,7 @@
     "@nativescript/core": "^7.0.3",
     "@nativescript/theme": "^2.3.3",
     "@vue/devtools": "^5.3.3",
-    "nativescript-in-app-purchase": "file:../../package",
+    "nativescript-iap": "file:../../package",
     "nativescript-socketio": "^3.3.1",
     "nativescript-toasty": "^3.0.0-alpha.2",
     "nativescript-vue": "^2.8.1",

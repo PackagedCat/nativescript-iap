@@ -2,12 +2,6 @@
     "name": "nativescript-iap",
     "version": "7.0.0",
     "description": "A NativeScript plugin for making in-app purchases",
-    "nativescript": {
-        "platforms": {
-            "android": "6.0.0",
-            "ios": "6.0.1"
-        }
-    },
     "repository": {
         "type": "git",
         "url": "https://github.com/PackagedCat/nativescript-iap"

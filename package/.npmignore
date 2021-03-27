@@ -1,0 +1,7 @@
+*.ts
+!*.d.ts
+*.android.d.ts
+*.common.d.ts
+*.ios.d.ts
+platforms/android/*.aar
+.DS_Store

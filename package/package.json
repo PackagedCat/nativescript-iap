@@ -1,6 +1,6 @@
 {
   "name": "nativescript-iap",
-  "version": "7.0.0",
+  "version": "7.0.4",
   "description": "A NativeScript plugin for making in-app purchases",
   "main": "index",
   "typings": "index.d.ts",
@@ -20,17 +20,22 @@
     "in-app purchase",
     "in-app billing",
     "payment",
+    "purchase",
+    "billing",
     "subscription"
   ],
-  "author": "Shamsuddin Dzhamalov <packagedcat@outlook.com>",
+  "author": {
+		"name": "Shamsuddin Dzhamalov",
+		"email": "packagedcat@outlook.com"
+	},
   "contributors": [],
   "license": "Apache-2.0",
   "devDependencies": {
-    "@nativescript/core": "~7.0.0",
+    "@nativescript/core": "^7.0.0",
     "@nativescript/types": "^7.3.0",
-    "@nativescript/webpack": "~3.0.0",
+    "@nativescript/webpack": "^3.0.0",
     "ts-patch": "^1.3.0",
-    "typescript": "~3.9.0"
+    "typescript": "^3.9.0"
   },
   "dependencies": {
     "ts-node": "^9.0.0"

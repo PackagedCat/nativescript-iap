@@ -1,6 +1,6 @@
 {
   "name": "nativescript-iap",
-  "version": "7.0.6",
+  "version": "7.0.7",
   "description": "A NativeScript plugin for making in-app purchases",
   "main": "index",
   "typings": "index.d.ts",
@@ -8,8 +8,19 @@
     "platforms": {
       "android": "7.0.0",
       "ios": "7.0.0"
-    }
+    },
+		"hooks": [
+			{
+				"type": "after-prepare",
+				"script": "scripts/after-prepare.js",
+				"inject": true
+			}
+		]
   },
+	"scripts": {
+		"postinstall": "node postinstall-hooks.js",
+		"preuninstall": "node preuninstall.js"
+	},
   "repository": {
     "type": "git",
     "url": "https://github.com/PackagedCat/nativescript-iap"
@@ -29,5 +40,8 @@
     "email": "packagedcat@outlook.com"
   },
   "contributors": [],
-  "license": "Apache-2.0"
+  "license": "Apache-2.0",
+	"dependencies": {
+		"xcode": "^0.9.3"
+	}
 }

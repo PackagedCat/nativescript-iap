@@ -1,5 +1,7 @@
 .DS_Store
 *.js
+!**/postinstall-hooks.js
+!**/preuninstall.js
 *.js.map
 **/node_modules
 package/**/*.d.ts

@@ -153,14 +153,12 @@ export class InAppPurchase extends InAppPurchaseBase {
 
         let nativeProducts = await this.getNativeProducts(productsIds, com.android.billingclient.api.BillingClient.SkuType.INAPP);
         for (let i = 0; i < nativeProducts.length; i++) {
-            const nativeProduct = nativeProducts[i];
-            products.push(new Product(nativeProduct));
+            products.push(new Product(nativeProducts[i]));
         }
 
         nativeProducts = await this.getNativeProducts(productsIds, com.android.billingclient.api.BillingClient.SkuType.SUBS);
         for (let i = 0; i < nativeProducts.length; i++) {
-            const nativeProduct = nativeProducts[i];
-            products.push(new Product(nativeProduct));
+            products.push(new Product(nativeProducts[i]));
         }
 
         return products;

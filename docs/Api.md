@@ -9,6 +9,12 @@ Notifies the store that the app finished processing the transaction.
 
 All purchases require finish, regardless of whether it succeeded or failed Failure to complete a succeeded purchase will result in that purchase being refunded. 
 
+**(ANDROID ONLY) consumePurchase(transaction: `Transaction`)**: *Promise\<void\>*  
+Consumes the purchase represented by the given transaction.
+
+Resolves if `getResponseCode() === BillingResponseCode.OK`
+else it rejects with an Object: `{ code: Number, error: String }`.
+
 **getProducts(productsIds: string[])**: *Promise\<Product[]\>*  
 Retrieves localized information from the store about a specified list of products.
 

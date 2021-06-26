@@ -161,6 +161,29 @@ export class InAppPurchase extends InAppPurchaseBase {
         });
     }
 
+    public consumePurchase(transaction: Transaction): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+            const ConsumeParams = com.android.billingclient.api.ConsumeParams.newBuilder()
+                .setPurchaseToken(transaction.nativeObject.getPurchaseToken())
+                .build();
+                
+            this.nativeObject.consumeAsync(
+                ConsumeParams,
+                new com.android.billingclient.api.ConsumeResponseListener({
+                    onConsumeResponse(billingResult) {
+                        if (billingResult.getResponseCode() === com.android.billingclient.api.BillingClient.BillingResponseCode.OK) {
+                            resolve();
+                        } else {
+                            reject({ 
+                                code: billingResult.getResponseCode(),
+                                error: billingResult.getDebugMessage()
+                            });
+                        }
+                    }
+                }));
+        });
+    }
+
     public async getProducts(productsIds: string[]): Promise<Product[]> {
         await this.connectAsync();
 

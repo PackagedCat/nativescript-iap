@@ -58,6 +58,21 @@ import inAppPurchase from "nativescript-iap";
 await inAppPurchase.restorePurchases();
 ```
 
+### (ANDROID ONLY) Consuming the purchased product
+```typescript
+import inAppPurchase from "nativescript-iap";
+
+inAppPurchase.consumePurchase(transaction) // transaction returned by the "purchaseUpdated" hook.
+    .then(() => {
+        // transaction product was consumed and can be bought again.
+    }).catch((e) => {
+        // Error
+        // e: { code: billingResult.getResponseCode(), error: billingResult.getDebugMessage() }
+        // See https://developer.android.com/reference/com/android/billingclient/api/BillingClient.BillingResponseCode
+        // for meaning of returned ResponseCodes.
+    });
+```
+
 ### Showing the price consent dialog
 ```typescript
 import inAppPurchase from "nativescript-iap";

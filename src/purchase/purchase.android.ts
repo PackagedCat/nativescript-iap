@@ -26,37 +26,52 @@ export class InAppPurchase extends InAppPurchaseBase {
     //#region Native methods
 
     private async onPurchasesUpdated(billingResult: com.android.billingclient.api.BillingResult, purchases: java.util.List<com.android.billingclient.api.Purchase>) {
-        const nativeTransactions = purchases.toArray();
-        const transactions = new Array<Transaction>();
-
-        for (let i = 0; i < nativeTransactions.length; i++) {
-            const transaction = new Transaction(nativeTransactions[i]);
-            switch (billingResult.getResponseCode()) {
-                case com.android.billingclient.api.BillingClient.BillingResponseCode.USER_CANCELED:
-                    transaction.error = new PurchaseError(
-                        PurchaseErrorCode.canceled,
-                        billingResult.getDebugMessage() ?? "User canceled");
-                    break;
-                case com.android.billingclient.api.BillingClient.BillingResponseCode.ITEM_ALREADY_OWNED:
-                    transaction.error = new PurchaseError(
-                        PurchaseErrorCode.itemAlreadyOwned,
-                        billingResult.getDebugMessage() ?? "Item already owned");
-                    break;
-                case com.android.billingclient.api.BillingClient.BillingResponseCode.ITEM_UNAVAILABLE:
-                    transaction.error = new PurchaseError(
-                        PurchaseErrorCode.itemUnavailable,
-                        billingResult.getDebugMessage() ?? "Item unavailable");
-                    break;
+        if (billingResult.getResponseCode() == com.android.billingclient.api.BillingClient.BillingResponseCode.OK && purchases != null) {
+            const nativeTransactions = purchases.toArray();
+            const transactions = new Array<Transaction>();
+    
+            for (let i = 0; i < nativeTransactions.length; i++) {
+                const transaction = new Transaction(nativeTransactions[i]);
+                switch (billingResult.getResponseCode()) {
+                    case com.android.billingclient.api.BillingClient.BillingResponseCode.USER_CANCELED:
+                        transaction.error = new PurchaseError(
+                            PurchaseErrorCode.canceled,
+                            billingResult.getDebugMessage() ?? "User canceled");
+                        break;
+                    case com.android.billingclient.api.BillingClient.BillingResponseCode.ITEM_ALREADY_OWNED:
+                        transaction.error = new PurchaseError(
+                            PurchaseErrorCode.itemAlreadyOwned,
+                            billingResult.getDebugMessage() ?? "Item already owned");
+                        break;
+                    case com.android.billingclient.api.BillingClient.BillingResponseCode.ITEM_UNAVAILABLE:
+                        transaction.error = new PurchaseError(
+                            PurchaseErrorCode.itemUnavailable,
+                            billingResult.getDebugMessage() ?? "Item unavailable");
+                        break;
+                }
+    
+                transactions.push(transaction);
             }
+    
+            this.notify({
+                eventName: InAppPurchase.purchaseUpdatedEvent,
+                object: this,
+                transactions: transactions
+            } as PurchaseEventData);
 
-            transactions.push(transaction);
+        } else if (billingResult.getResponseCode() == com.android.billingclient.api.BillingClient.BillingResponseCode.USER_CANCELED) {
+            // Handle an error caused by a user cancelling the purchase flow.
+            this.notify({
+                eventName: InAppPurchase.purchaseUpdatedEvent,
+                object: this,
+                transactions: [{
+                    state: TransactionState.failed,
+                    error: new PurchaseError(PurchaseErrorCode.canceled, billingResult.getDebugMessage())
+                }]
+            });
+        } else {
+            // Handle any other error codes.
         }
-
-        this.notify({
-            eventName: InAppPurchase.purchaseUpdatedEvent,
-            object: this,
-            transactions: transactions
-        } as PurchaseEventData);
     }
 
     private async connectAsync() {

@@ -10,6 +10,13 @@ export class InAppPurchase extends Observable {
     public nativeObject: any;
 
     /**
+     * Consumes a given in-app product. Consuming can only be done on an item that's owned,
+     * and as a result of consumption, the user will no longer own it.
+     * @param transaction The transaction to consume.
+     */
+    public consumePurchase(transaction: Transaction): Promise<void>;
+
+    /**
      * Notifies the store that the app finished processing the transaction.
      * @param transaction The transaction to finish.
      * 

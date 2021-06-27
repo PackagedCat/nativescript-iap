@@ -113,6 +113,11 @@ export class InAppPurchase extends InAppPurchaseBase {
         }
     }
 
+    /** Android only */
+    public consumePurchase(transaction: Transaction): Promise<void> {
+        return Promise.resolve();
+    }
+
     public finishTransaction(transaction: Transaction): Promise<void> {
         return new Promise((resolve, reject) => {
             if (transaction.state === TransactionState.restored) {

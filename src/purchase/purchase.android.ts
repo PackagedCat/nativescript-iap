@@ -154,7 +154,10 @@ export class InAppPurchase extends InAppPurchaseBase {
                         if (billingResult.getResponseCode() === com.android.billingclient.api.BillingClient.BillingResponseCode.OK) {
                             resolve();
                         } else {
-                            reject(billingResult.getDebugMessage());
+                            reject({
+                                code: billingResult.getResponseCode(),
+                                error: billingResult.getDebugMessage()
+                            });
                         }
                     }
                 }));
@@ -163,12 +166,12 @@ export class InAppPurchase extends InAppPurchaseBase {
 
     public consumePurchase(transaction: Transaction): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            const ConsumeParams = com.android.billingclient.api.ConsumeParams.newBuilder()
+            const consumeParams = com.android.billingclient.api.ConsumeParams.newBuilder()
                 .setPurchaseToken(transaction.nativeObject.getPurchaseToken())
                 .build();
-                
+
             this.nativeObject.consumeAsync(
-                ConsumeParams,
+                consumeParams,
                 new com.android.billingclient.api.ConsumeResponseListener({
                     onConsumeResponse(billingResult) {
                         if (billingResult.getResponseCode() === com.android.billingclient.api.BillingClient.BillingResponseCode.OK) {
@@ -238,7 +241,7 @@ export class InAppPurchase extends InAppPurchaseBase {
     public async showPriceConsent(product?: Product): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             if (product == null) {
-                reject("Parameter \"product\" must not be null.");
+                reject("The parameter \"product\" must not be null.");
                 return;
             }
 

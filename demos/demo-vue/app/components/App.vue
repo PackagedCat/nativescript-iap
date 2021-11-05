@@ -1,34 +1,54 @@
 <template>
     <Page>
-        <ActionBar title="Product list"/>
-        <GridLayout>
+        <ActionBar title="Product list" />
+        <GridLayout
+            rows="*,auto"
+        >
             <ListView
                 for="item in items"
-                @itemTap="onItemTap">
+                @itemTap="onItemTap"
+            >
                 <v-template>
                     <StackLayout padding="20,10">
                         <Label
                             textWrap="true"
-                            :text="item.title" />
+                            :text="item.title"
+                        />
                         <Label
                             class="footnote"
                             textWrap="true"
-                            :text="item.description" />
+                            :text="item.description"
+                        />
                     </StackLayout>
                 </v-template>
             </ListView>
 
-            <GridLayout v-if="isLoading && items.length === 0">
+            <StackLayout
+                row="1"
+            >
+                <button
+                    text="Restore purchases"
+                    @tap="onRestorePurchasesTap"
+                />
+            </StackLayout>
+
+            <GridLayout
+                v-if="isLoading && items.length === 0"
+                rowSpan="2"
+            >
                 <StackLayout
                     horizontalAlignment="center"
-                    verticalAlignment="center">
+                    verticalAlignment="center"
+                >
                     <ActivityIndicator
                         width="100"
                         height="100"
-                        :busy="isLoading"/>
+                        :busy="isLoading"
+                    />
                     <Label
                         marginTop="10"
-                        text="Loading products..."/>
+                        text="Loading products..."
+                    />
                 </StackLayout>
             </GridLayout>
         </GridLayout>
@@ -36,13 +56,15 @@
 </template>
 
 <script lang="ts">
-import inAppPurchase, { PurchaseEventData, TransactionState } from 'nativescript-iap';
-export default {
+import Vue from "vue";
+import inAppPurchase, { PurchaseEventData, Product, PurchaseError, TransactionState } from "nativescript-iap";
+
+export default Vue.extend({
     data() {
         return {
-            items: [],
+            items: new Array<Product>(),
             isLoading: false
-        }
+        };
     },
     mounted() {
         this.refresh();
@@ -62,22 +84,41 @@ export default {
             }
             this.isLoading = false;
         },
-        onItemTap(args) {
-            inAppPurchase.purchase(args.item);
+        async onItemTap(args: any) {
+            try {
+                await inAppPurchase.purchase(args.item);
+            } catch (error) {
+                if (error instanceof PurchaseError) {
+                    alert(error.message);
+                } else {
+                    console.error(error);
+                }
+            }
         },
         onPurchaseUpdated(data: PurchaseEventData) {
             for (const transaction of data.transactions) {
                 if (transaction.state === TransactionState.purchased) {
                     // Delivering the content
                 } else if (transaction.state === TransactionState.failed) {
-                    console.error(transaction.error);
+                    console.error(transaction);
                 }
 
                 inAppPurchase.finishTransaction(transaction);
             }
+        },
+        async onRestorePurchasesTap() {
+            if (this.isLoading) {
+                return;
+            }
+
+            this.isLoading = true;
+
+            await inAppPurchase.restorePurchases();
+
+            this.isLoading = false;
         }
     }
-}
+});
 </script>
 
 <style scoped>

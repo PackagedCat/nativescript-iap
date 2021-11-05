@@ -5,12 +5,12 @@ export enum ProductType {
     /**
      * A type of in-app products.
      */
-    inApp = 0,
+    inApp = "in_app",
 
     /**
      * A type of subscription products.
      */
-    subs = 1
+    subs = "subscription"
 }
 
 /**
@@ -20,37 +20,37 @@ export enum SubscriptionPeriod {
     /**
      * iOS only: An interval lasting one day.
      */
-    day = 0,
+    day = "day",
 
     /**
      * An interval lasting one month.
      */
-    month = 1,
+    month = "month",
 
     /**
      * Android only: An interval lasting six month.
      */
-    sixMonth = 2,
+    sixMonth = "six-month",
 
     /**
      * Android only: An interval lasting three month.
      */
-    threeMonth = 3,
+    threeMonth = "three-month",
 
     /**
      * Android only: An interval lasting three week.
      */
-    threeWeek = 4,
+    threeWeek = "three-week",
 
     /**
      * An interval lasting one week.
      */
-    week = 5,
+    week = "week",
 
     /**
      * An interval lasting one year.
      */
-    year = 6
+    year = "year"
 }
 
 export class Product {

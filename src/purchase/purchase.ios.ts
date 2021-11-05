@@ -1,16 +1,16 @@
-import { InAppPurchaseBase, PurchaseEventData } from "./purchase.common";
+import { InAppPurchaseBase, PurchaseError, PurchaseErrorCode, PurchaseEventData } from "./purchase.common";
 import { Product } from "../product/product";
-import { PurchaseError, PurchaseErrorCode, Transaction, TransactionState } from "../transaction/transaction";
+import { Transaction } from "../transaction/transaction";
 
 export * from "./purchase.common";
 
 @NativeClass
 class SKPaymentTransactionObserverImpl extends NSObject implements SKPaymentTransactionObserver {
     public static ObjCProtocols = [SKPaymentTransactionObserver];
-    private _onwer: WeakRef<InAppPurchase>;
+    private _onwer!: WeakRef<InAppPurchase>;
 
-    private _completePromiseResolve: (value: void | PromiseLike<void>) => void;
-    private _completePromiseReject: (reason?: any) => void;
+    private _completePromiseResolve?: (value: void | PromiseLike<void>) => void;
+    private _completePromiseReject?: (reason?: any) => void;
 
     public static initWithOnwer(owner: InAppPurchase) {
         const observer = <SKPaymentTransactionObserverImpl>SKPaymentTransactionObserverImpl.new();
@@ -23,24 +23,16 @@ class SKPaymentTransactionObserverImpl extends NSObject implements SKPaymentTran
         this._completePromiseReject = reject;
     }
 
-	public paymentQueueRestoreCompletedTransactionsFailedWithError(queue: SKPaymentQueue, error: NSError): void {
+    public paymentQueueRestoreCompletedTransactionsFailedWithError(queue: SKPaymentQueue, error: NSError): void {
         if (this._completePromiseReject != null) {
             this._completePromiseReject(new PurchaseError(
                 PurchaseErrorCode.unknown,
-                error.description
+                error.description,
+                error
             ));
 
-            this._completePromiseResolve = null;
-            this._completePromiseReject = null;
-        }
-    }
-
-	public paymentQueueRestoreCompletedTransactionsFinished(queue: SKPaymentQueue): void {
-        if (this._completePromiseResolve != null) {
-            this._completePromiseResolve();
-
-            this._completePromiseResolve = null;
-            this._completePromiseReject = null;
+            this._completePromiseResolve = undefined;
+            this._completePromiseReject = undefined;
         }
     }
 
@@ -52,7 +44,12 @@ class SKPaymentTransactionObserverImpl extends NSObject implements SKPaymentTran
 
         const transactions = new Array<Transaction>();
         for (let i = 0; i < nativeTransactions.count; i++) {
-            transactions.push(new Transaction(nativeTransactions[i]));
+            const nativeTransaction = nativeTransactions[i];
+            if (nativeTransaction.transactionState === SKPaymentTransactionState.Failed) {
+                queue.finishTransaction(nativeTransaction);
+            } else {
+                transactions.push(new Transaction(nativeTransaction));
+            }
         }
 
         onwer.notify<PurchaseEventData>({
@@ -66,7 +63,7 @@ class SKPaymentTransactionObserverImpl extends NSObject implements SKPaymentTran
 @NativeClass
 class SKProductsRequestDelegateImpl extends NSObject implements SKProductsRequestDelegate {
     public static ObjCProtocols = [SKProductsRequestDelegate];
-    private _resolve: (value: Product[] | PromiseLike<Product[]>) => void;
+    private _resolve!: (value: Product[] | PromiseLike<Product[]>) => void;
 
     public static initWithPromise(resolve: (value: Product[] | PromiseLike<Product[]>) => void) {
         const observer = <SKProductsRequestDelegateImpl>SKProductsRequestDelegateImpl.new();
@@ -114,17 +111,14 @@ export class InAppPurchase extends InAppPurchaseBase {
     }
 
     /** Android only */
-    public consumePurchase(transaction: Transaction): Promise<void> {
+    public consumePurchase(): Promise<void> {
         return Promise.resolve();
     }
 
     public finishTransaction(transaction: Transaction): Promise<void> {
         return new Promise((resolve, reject) => {
-            if (transaction.state === TransactionState.restored) {
-                resolve();
-                return;
-            }
-            
+            this.checkAuthorization();
+    
             this._transactionObserver.setComplitePromise(resolve, reject);
             this.nativeObject.finishTransaction(transaction.nativeObject);
         });
@@ -144,6 +138,8 @@ export class InAppPurchase extends InAppPurchaseBase {
     }
 
     public restorePurchases(): Promise<void> {
+        this.checkAuthorization();
+
         this.nativeObject.restoreCompletedTransactions();
         return Promise.resolve();
     }
@@ -157,7 +153,9 @@ export class InAppPurchase extends InAppPurchaseBase {
         return Promise.resolve();
     }
 
-    public showPriceConsent(product?: Product): Promise<void> {
+    public showPriceConsent(): Promise<void> {
+        this.checkAuthorization();
+
         this.nativeObject.showPriceConsentIfNeeded();
         return Promise.resolve();
     }

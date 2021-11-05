@@ -1,33 +1,27 @@
 {
   "name": "demo-vue",
-  "main": "main.js",
+  "main": "app/app.ts",
   "version": "1.0.0",
   "description": "A native application built with NativeScript-Vue",
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "@nativescript/core": "^7.0.3",
+    "@nativescript/core": "^8.1.5",
     "@nativescript/theme": "^2.3.3",
-    "@vue/devtools": "^5.3.3",
     "nativescript-iap": "file:../../package",
     "nativescript-socketio": "^3.3.1",
     "nativescript-toasty": "^3.0.0-alpha.2",
-    "nativescript-vue": "^2.8.1",
-    "nativescript-vue-devtools": "^1.4.0"
+    "nativescript-vue": "^2.9.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.11.6",
-    "@babel/preset-env": "^7.11.5",
-    "@nativescript/android": "7.0.1",
-    "@nativescript/types": "^7.0.0",
-    "@nativescript/webpack": "^3.0.4",
-    "@types/node": "^14.6.2",
-    "babel-loader": "^8.1.0",
-    "nativescript-vue-template-compiler": "^2.8.1",
+    "@nativescript/android": "^8.1.1",
+    "@nativescript/ios": "^8.1.0",
+    "@nativescript/types": "^8.1.0",
+    "@nativescript/webpack": "^5.0.0",
+    "@types/node": "^14.17.32",
+    "nativescript-vue-template-compiler": "^2.9.0",
     "nativescript-worker-loader": "~0.12.1",
-    "sass": "^1.26.10",
-    "typescript": "^3.9.7",
-    "vue": "^2.6.12",
-    "vue-loader": "^15.9.3"
+    "typescript": "^4.4.4",
+    "vue": "^2.6.14"
   }
 }

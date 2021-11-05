@@ -73,12 +73,15 @@ declare namespace com {
 				export abstract class BillingClient {
 					public static class: java.lang.Class<com.android.billingclient.api.BillingClient>;
 					public isReady(): boolean;
-					public queryPurchases(param0: string): com.android.billingclient.api.Purchase.PurchasesResult;
 					public launchBillingFlow(param0: globalAndroid.app.Activity, param1: com.android.billingclient.api.BillingFlowParams): com.android.billingclient.api.BillingResult;
 					public endConnection(): void;
 					public acknowledgePurchase(param0: com.android.billingclient.api.AcknowledgePurchaseParams, param1: com.android.billingclient.api.AcknowledgePurchaseResponseListener): void;
 					public querySkuDetailsAsync(param0: com.android.billingclient.api.SkuDetailsParams, param1: com.android.billingclient.api.SkuDetailsResponseListener): void;
+					/** @deprecated */
+					public queryPurchases(param0: string): com.android.billingclient.api.Purchase.PurchasesResult;
 					public queryPurchaseHistoryAsync(param0: string, param1: com.android.billingclient.api.PurchaseHistoryResponseListener): void;
+					public queryPurchasesAsync(param0: string, param1: com.android.billingclient.api.PurchasesResponseListener): void;
+					public getConnectionState(): number;
 					public static newBuilder(param0: globalAndroid.content.Context): com.android.billingclient.api.BillingClient.Builder;
 					public isFeatureSupported(param0: string): com.android.billingclient.api.BillingResult;
 					public startConnection(param0: com.android.billingclient.api.BillingClientStateListener): void;
@@ -113,6 +116,19 @@ declare namespace com {
 						public build(): com.android.billingclient.api.BillingClient;
 						public setListener(param0: com.android.billingclient.api.PurchasesUpdatedListener): com.android.billingclient.api.BillingClient.Builder;
 						public enablePendingPurchases(): com.android.billingclient.api.BillingClient.Builder;
+					}
+					export class ConnectionState {
+						public static class: java.lang.Class<com.android.billingclient.api.BillingClient.ConnectionState>;
+						/**
+						 * Constructs a new instance of the com.android.billingclient.api.BillingClient$ConnectionState interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+						 */
+						public constructor(implementation: {
+						});
+						public constructor();
+						public static CONNECTED: number;
+						public static DISCONNECTED: number;
+						public static CLOSED: number;
+						public static CONNECTING: number;
 					}
 					export class FeatureType {
 						public static class: java.lang.Class<com.android.billingclient.api.BillingClient.FeatureType>;
@@ -154,13 +170,17 @@ declare namespace com {
 					public isReady(): boolean;
 					public queryPurchases(param0: string): com.android.billingclient.api.Purchase.PurchasesResult;
 					public launchBillingFlow(param0: globalAndroid.app.Activity, param1: com.android.billingclient.api.BillingFlowParams): com.android.billingclient.api.BillingResult;
-					public isFeatureSupported(param0: string): com.android.billingclient.api.BillingResult;
-					public startConnection(param0: com.android.billingclient.api.BillingClientStateListener): void;
 					public endConnection(): void;
 					public acknowledgePurchase(param0: com.android.billingclient.api.AcknowledgePurchaseParams, param1: com.android.billingclient.api.AcknowledgePurchaseResponseListener): void;
 					public querySkuDetailsAsync(param0: com.android.billingclient.api.SkuDetailsParams, param1: com.android.billingclient.api.SkuDetailsResponseListener): void;
-					public launchPriceChangeConfirmationFlow(param0: globalAndroid.app.Activity, param1: com.android.billingclient.api.PriceChangeFlowParams, param2: com.android.billingclient.api.PriceChangeConfirmationListener): void;
+					/** @deprecated */
+					public queryPurchases(param0: string): com.android.billingclient.api.Purchase.PurchasesResult;
 					public queryPurchaseHistoryAsync(param0: string, param1: com.android.billingclient.api.PurchaseHistoryResponseListener): void;
+					public queryPurchasesAsync(param0: string, param1: com.android.billingclient.api.PurchasesResponseListener): void;
+					public getConnectionState(): number;
+					public isFeatureSupported(param0: string): com.android.billingclient.api.BillingResult;
+					public startConnection(param0: com.android.billingclient.api.BillingClientStateListener): void;
+					public launchPriceChangeConfirmationFlow(param0: globalAndroid.app.Activity, param1: com.android.billingclient.api.PriceChangeFlowParams, param2: com.android.billingclient.api.PriceChangeConfirmationListener): void;
 					public consumeAsync(param0: com.android.billingclient.api.ConsumeParams, param1: com.android.billingclient.api.ConsumeResponseListener): void;
 				}
 			}
@@ -178,8 +198,8 @@ declare namespace com {
 					 * Constructs a new instance of the com.android.billingclient.api.BillingClientStateListener interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
 					 */
 					public constructor(implementation: {
-						onBillingSetupFinished(param0: com.android.billingclient.api.BillingResult): void;
 						onBillingServiceDisconnected(): void;
+						onBillingSetupFinished(param0: com.android.billingclient.api.BillingResult): void;
 					});
 					public constructor();
 					public onBillingSetupFinished(param0: com.android.billingclient.api.BillingResult): void;
@@ -202,13 +222,7 @@ declare namespace com {
 					public static EXTRA_PARAM_KEY_OLD_SKUS: string;
 					public static EXTRA_PARAM_KEY_OLD_SKU_PURCHASE_TOKEN: string;
 					public getVrPurchaseFlow(): boolean;
-					public getSkuDetails(): com.android.billingclient.api.SkuDetails;
-					public getReplaceSkusProrationMode(): number;
-					public getSku(): string;
-					public getOldSku(): string;
 					public static newBuilder(): com.android.billingclient.api.BillingFlowParams.Builder;
-					public getOldSkuPurchaseToken(): string;
-					public getSkuType(): string;
 				}
 				export namespace BillingFlowParams {
 					export class Builder {
@@ -217,9 +231,8 @@ declare namespace com {
 						public setObfuscatedProfileId(param0: string): com.android.billingclient.api.BillingFlowParams.Builder;
 						public setSkuDetails(param0: com.android.billingclient.api.SkuDetails): com.android.billingclient.api.BillingFlowParams.Builder;
 						public setObfuscatedAccountId(param0: string): com.android.billingclient.api.BillingFlowParams.Builder;
-						public setReplaceSkusProrationMode(param0: number): com.android.billingclient.api.BillingFlowParams.Builder;
 						public build(): com.android.billingclient.api.BillingFlowParams;
-						public setOldSku(param0: string, param1: string): com.android.billingclient.api.BillingFlowParams.Builder;
+						public setSubscriptionUpdateParams(param0: com.android.billingclient.api.BillingFlowParams.SubscriptionUpdateParams): com.android.billingclient.api.BillingFlowParams.Builder;
 					}
 					export class ProrationMode {
 						public static class: java.lang.Class<com.android.billingclient.api.BillingFlowParams.ProrationMode>;
@@ -233,7 +246,20 @@ declare namespace com {
 						public static DEFERRED: number;
 						public static UNKNOWN_SUBSCRIPTION_UPGRADE_DOWNGRADE_POLICY: number;
 						public static IMMEDIATE_AND_CHARGE_PRORATED_PRICE: number;
+						public static IMMEDIATE_AND_CHARGE_FULL_PRICE: number;
 						public static IMMEDIATE_WITHOUT_PRORATION: number;
+					}
+					export class SubscriptionUpdateParams {
+						public static class: java.lang.Class<com.android.billingclient.api.BillingFlowParams.SubscriptionUpdateParams>;
+						public static newBuilder(): com.android.billingclient.api.BillingFlowParams.SubscriptionUpdateParams.Builder;
+					}
+					export namespace SubscriptionUpdateParams {
+						export class Builder {
+							public static class: java.lang.Class<com.android.billingclient.api.BillingFlowParams.SubscriptionUpdateParams.Builder>;
+							public build(): com.android.billingclient.api.BillingFlowParams.SubscriptionUpdateParams;
+							public setOldSkuPurchaseToken(param0: string): com.android.billingclient.api.BillingFlowParams.SubscriptionUpdateParams.Builder;
+							public setReplaceSkusProrationMode(param0: number): com.android.billingclient.api.BillingFlowParams.SubscriptionUpdateParams.Builder;
+						}
 					}
 				}
 			}
@@ -332,8 +358,8 @@ declare namespace com {
 			export namespace api {
 				export class PriceChangeFlowParams {
 					public static class: java.lang.Class<com.android.billingclient.api.PriceChangeFlowParams>;
-					public constructor();
 					public getSkuDetails(): com.android.billingclient.api.SkuDetails;
+					public constructor();
 					public static newBuilder(): com.android.billingclient.api.PriceChangeFlowParams.Builder;
 				}
 				export namespace PriceChangeFlowParams {
@@ -355,8 +381,8 @@ declare namespace com {
 			export namespace api {
 				export class ProxyBillingActivity {
 					public static class: java.lang.Class<com.android.billingclient.api.ProxyBillingActivity>;
-					public onSaveInstanceState(param0: globalAndroid.os.Bundle): void;
 					public onActivityResult(param0: number, param1: number, param2: globalAndroid.content.Intent): void;
+					public onSaveInstanceState(param0: globalAndroid.os.Bundle): void;
 					public onCreate(param0: globalAndroid.os.Bundle): void;
 					public constructor();
 					public onDestroy(): void;
@@ -374,8 +400,10 @@ declare namespace com {
 					public static class: java.lang.Class<com.android.billingclient.api.Purchase>;
 					public getOrderId(): string;
 					public getPurchaseState(): number;
+					public getSkus(): java.util.ArrayList<string>;
 					public getPackageName(): string;
 					public isAcknowledged(): boolean;
+					public getQuantity(): number;
 					public getPurchaseToken(): string;
 					public constructor(param0: string, param1: string);
 					public equals(param0: any): boolean;
@@ -383,7 +411,6 @@ declare namespace com {
 					public getSignature(): string;
 					public getPurchaseTime(): number;
 					public getOriginalJson(): string;
-					public getSku(): string;
 					public getDeveloperPayload(): string;
 					public isAutoRenewing(): boolean;
 					public hashCode(): number;
@@ -425,11 +452,12 @@ declare namespace com {
 					public equals(param0: any): boolean;
 					public toString(): string;
 					public getSignature(): string;
+					public getSkus(): java.util.ArrayList<string>;
 					public getPurchaseTime(): number;
 					public getOriginalJson(): string;
-					public getSku(): string;
 					public getDeveloperPayload(): string;
 					public hashCode(): number;
+					public getQuantity(): number;
 					public getPurchaseToken(): string;
 				}
 			}
@@ -451,6 +479,26 @@ declare namespace com {
 					});
 					public constructor();
 					public onPurchaseHistoryResponse(param0: com.android.billingclient.api.BillingResult, param1: java.util.List<com.android.billingclient.api.PurchaseHistoryRecord>): void;
+				}
+			}
+		}
+	}
+}
+
+declare namespace com {
+	export namespace android {
+		export namespace billingclient {
+			export namespace api {
+				export class PurchasesResponseListener {
+					public static class: java.lang.Class<com.android.billingclient.api.PurchasesResponseListener>;
+					/**
+					 * Constructs a new instance of the com.android.billingclient.api.PurchasesResponseListener interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+					 */
+					public constructor(implementation: {
+						onQueryPurchasesResponse(param0: com.android.billingclient.api.BillingResult, param1: java.util.List<com.android.billingclient.api.Purchase>): void;
+					});
+					public constructor();
+					public onQueryPurchasesResponse(param0: com.android.billingclient.api.BillingResult, param1: java.util.List<com.android.billingclient.api.Purchase>): void;
 				}
 			}
 		}
@@ -489,20 +537,20 @@ declare namespace com {
 					public getIntroductoryPriceCycles(): number;
 					public equals(param0: any): boolean;
 					public toString(): string;
-					public getSubscriptionPeriod(): string;
 					public getIntroductoryPrice(): string;
-					public getOriginalJson(): string;
+					public getSubscriptionPeriod(): string;
 					public getPriceAmountMicros(): number;
-					public getSku(): string;
+					public getOriginalJson(): string;
 					public getIntroductoryPricePeriod(): string;
+					public getSku(): string;
 					public getIntroductoryPriceAmountMicros(): number;
 					public getOriginalPriceAmountMicros(): number;
-					public getType(): string;
-					public getDescription(): string;
 					public hashCode(): number;
-					public getPrice(): string;
-					public getOriginalPrice(): string;
+					public getDescription(): string;
+					public getType(): string;
 					public getIconUrl(): string;
+					public getOriginalPrice(): string;
+					public getPrice(): string;
 					public getFreeTrialPeriod(): string;
 				}
 			}
@@ -570,7 +618,7 @@ declare namespace com {
 	export namespace android {
 		export namespace billingclient {
 			export namespace api {
-				export class zzaa extends java.util.concurrent.Callable<globalAndroid.os.Bundle> {
+				export class zzaa extends java.util.concurrent.Callable<java.lang.Void> {
 					public static class: java.lang.Class<com.android.billingclient.api.zzaa>;
 				}
 			}
@@ -582,7 +630,7 @@ declare namespace com {
 	export namespace android {
 		export namespace billingclient {
 			export namespace api {
-				export class zzab extends java.util.concurrent.Callable<com.android.billingclient.api.Purchase.PurchasesResult> {
+				export class zzab extends java.util.concurrent.Callable<java.lang.Void> {
 					public static class: java.lang.Class<com.android.billingclient.api.zzab>;
 				}
 			}
@@ -596,7 +644,7 @@ declare namespace com {
 			export namespace api {
 				export class zzac {
 					public static class: java.lang.Class<com.android.billingclient.api.zzac>;
-					public run(): void;
+					public newThread(param0: java.lang.Runnable): java.lang.Thread;
 				}
 			}
 		}
@@ -607,8 +655,9 @@ declare namespace com {
 	export namespace android {
 		export namespace billingclient {
 			export namespace api {
-				export class zzad extends java.util.concurrent.Callable<java.lang.Void> {
+				export class zzad {
 					public static class: java.lang.Class<com.android.billingclient.api.zzad>;
+					public run(): void;
 				}
 			}
 		}
@@ -621,7 +670,7 @@ declare namespace com {
 			export namespace api {
 				export class zzae {
 					public static class: java.lang.Class<com.android.billingclient.api.zzae>;
-					public run(): void;
+					public call(): any;
 				}
 			}
 		}
@@ -632,8 +681,10 @@ declare namespace com {
 	export namespace android {
 		export namespace billingclient {
 			export namespace api {
-				export class zzaf extends java.util.concurrent.Callable<java.lang.Void> {
+				export class zzaf {
 					public static class: java.lang.Class<com.android.billingclient.api.zzaf>;
+					public onServiceConnected(param0: globalAndroid.content.ComponentName, param1: globalAndroid.os.IBinder): void;
+					public onServiceDisconnected(param0: globalAndroid.content.ComponentName): void;
 				}
 			}
 		}
@@ -646,7 +697,6 @@ declare namespace com {
 			export namespace api {
 				export class zzag {
 					public static class: java.lang.Class<com.android.billingclient.api.zzag>;
-					public run(): void;
 				}
 			}
 		}
@@ -657,10 +707,26 @@ declare namespace com {
 	export namespace android {
 		export namespace billingclient {
 			export namespace api {
-				export class zzah {
+				export class zzah implements com.android.billingclient.api.AcknowledgePurchaseResponseListener, com.android.billingclient.api.BillingClientStateListener, com.android.billingclient.api.ConsumeResponseListener, com.android.billingclient.api.PriceChangeConfirmationListener, com.android.billingclient.api.PurchaseHistoryResponseListener, com.android.billingclient.api.PurchasesResponseListener, com.android.billingclient.api.PurchasesUpdatedListener, com.android.billingclient.api.SkuDetailsResponseListener {
 					public static class: java.lang.Class<com.android.billingclient.api.zzah>;
-					public onServiceConnected(param0: globalAndroid.content.ComponentName, param1: globalAndroid.os.IBinder): void;
-					public onServiceDisconnected(param0: globalAndroid.content.ComponentName): void;
+					public onBillingSetupFinished(param0: com.android.billingclient.api.BillingResult): void;
+					public onQueryPurchasesResponse(param0: com.android.billingclient.api.BillingResult, param1: java.util.List<com.android.billingclient.api.Purchase>): void;
+					public static nativeOnAcknowledgePurchaseResponse(param0: number, param1: string, param2: number): void;
+					public onSkuDetailsResponse(param0: com.android.billingclient.api.BillingResult, param1: java.util.List<com.android.billingclient.api.SkuDetails>): void;
+					public static nativeOnBillingSetupFinished(param0: number, param1: string, param2: number): void;
+					public static nativeOnPriceChangeConfirmationResult(param0: number, param1: string, param2: number): void;
+					public onConsumeResponse(param0: com.android.billingclient.api.BillingResult, param1: string): void;
+					public static nativeOnPurchasesUpdated(param0: number, param1: string, param2: androidNative.Array<com.android.billingclient.api.Purchase>): void;
+					public static nativeOnConsumePurchaseResponse(param0: number, param1: string, param2: string, param3: number): void;
+					public static nativeOnQueryPurchasesResponse(param0: number, param1: string, param2: androidNative.Array<com.android.billingclient.api.Purchase>, param3: number): void;
+					public static nativeOnBillingServiceDisconnected(): void;
+					public static nativeOnSkuDetailsResponse(param0: number, param1: string, param2: androidNative.Array<com.android.billingclient.api.SkuDetails>, param3: number): void;
+					public onPriceChangeConfirmationResult(param0: com.android.billingclient.api.BillingResult): void;
+					public static nativeOnPurchaseHistoryResponse(param0: number, param1: string, param2: androidNative.Array<com.android.billingclient.api.PurchaseHistoryRecord>, param3: number): void;
+					public onPurchasesUpdated(param0: com.android.billingclient.api.BillingResult, param1: java.util.List<com.android.billingclient.api.Purchase>): void;
+					public onBillingServiceDisconnected(): void;
+					public onAcknowledgePurchaseResponse(param0: com.android.billingclient.api.BillingResult): void;
+					public onPurchaseHistoryResponse(param0: com.android.billingclient.api.BillingResult, param1: java.util.List<com.android.billingclient.api.PurchaseHistoryRecord>): void;
 				}
 			}
 		}
@@ -683,25 +749,8 @@ declare namespace com {
 	export namespace android {
 		export namespace billingclient {
 			export namespace api {
-				export class zzaj implements com.android.billingclient.api.AcknowledgePurchaseResponseListener, com.android.billingclient.api.BillingClientStateListener, com.android.billingclient.api.ConsumeResponseListener, com.android.billingclient.api.PriceChangeConfirmationListener, com.android.billingclient.api.PurchaseHistoryResponseListener, com.android.billingclient.api.PurchasesUpdatedListener, com.android.billingclient.api.SkuDetailsResponseListener {
+				export class zzaj {
 					public static class: java.lang.Class<com.android.billingclient.api.zzaj>;
-					public onBillingSetupFinished(param0: com.android.billingclient.api.BillingResult): void;
-					public static nativeOnAcknowledgePurchaseResponse(param0: number, param1: string, param2: number): void;
-					public onSkuDetailsResponse(param0: com.android.billingclient.api.BillingResult, param1: java.util.List<com.android.billingclient.api.SkuDetails>): void;
-					public static nativeOnBillingSetupFinished(param0: number, param1: string, param2: number): void;
-					public static nativeOnPriceChangeConfirmationResult(param0: number, param1: string, param2: number): void;
-					public onConsumeResponse(param0: com.android.billingclient.api.BillingResult, param1: string): void;
-					public static nativeOnPurchasesUpdated(param0: number, param1: string, param2: androidNative.Array<com.android.billingclient.api.Purchase>): void;
-					public static nativeOnConsumePurchaseResponse(param0: number, param1: string, param2: string, param3: number): void;
-					public static nativeOnQueryPurchasesResponse(param0: number, param1: string, param2: androidNative.Array<com.android.billingclient.api.Purchase>, param3: number): void;
-					public static nativeOnBillingServiceDisconnected(): void;
-					public static nativeOnSkuDetailsResponse(param0: number, param1: string, param2: androidNative.Array<com.android.billingclient.api.SkuDetails>, param3: number): void;
-					public onPriceChangeConfirmationResult(param0: com.android.billingclient.api.BillingResult): void;
-					public onPurchasesUpdated(param0: com.android.billingclient.api.BillingResult, param1: java.util.List<com.android.billingclient.api.Purchase>): void;
-					public static nativeOnPurchaseHistoryResponse(param0: number, param1: string, param2: androidNative.Array<com.android.billingclient.api.PurchaseHistoryRecord>, param3: number): void;
-					public onBillingServiceDisconnected(): void;
-					public onAcknowledgePurchaseResponse(param0: com.android.billingclient.api.BillingResult): void;
-					public onPurchaseHistoryResponse(param0: com.android.billingclient.api.BillingResult, param1: java.util.List<com.android.billingclient.api.PurchaseHistoryRecord>): void;
 				}
 			}
 		}
@@ -774,7 +823,6 @@ declare namespace com {
 			export namespace api {
 				export class zzap {
 					public static class: java.lang.Class<com.android.billingclient.api.zzap>;
-					public constructor(param0: number, param1: string, param2: java.util.List<com.android.billingclient.api.SkuDetails>);
 				}
 			}
 		}
@@ -787,42 +835,6 @@ declare namespace com {
 			export namespace api {
 				export class zzaq {
 					public static class: java.lang.Class<com.android.billingclient.api.zzaq>;
-				}
-			}
-		}
-	}
-}
-
-declare namespace com {
-	export namespace android {
-		export namespace billingclient {
-			export namespace api {
-				export class zzar {
-					public static class: java.lang.Class<com.android.billingclient.api.zzar>;
-				}
-			}
-		}
-	}
-}
-
-declare namespace com {
-	export namespace android {
-		export namespace billingclient {
-			export namespace api {
-				export class zzas {
-					public static class: java.lang.Class<com.android.billingclient.api.zzas>;
-				}
-			}
-		}
-	}
-}
-
-declare namespace com {
-	export namespace android {
-		export namespace billingclient {
-			export namespace api {
-				export class zzat {
-					public static class: java.lang.Class<com.android.billingclient.api.zzat>;
 				}
 			}
 		}
@@ -853,6 +865,12 @@ declare namespace com {
 			export namespace api {
 				export class zzc {
 					public static class: java.lang.Class<com.android.billingclient.api.zzc>;
+					/**
+					 * Constructs a new instance of the com.android.billingclient.api.zzc interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+					 */
+					public constructor(implementation: {
+					});
+					public constructor();
 				}
 			}
 		}
@@ -865,7 +883,12 @@ declare namespace com {
 			export namespace api {
 				export class zzd {
 					public static class: java.lang.Class<com.android.billingclient.api.zzd>;
-					public onReceive(param0: globalAndroid.content.Context, param1: globalAndroid.content.Intent): void;
+					/**
+					 * Constructs a new instance of the com.android.billingclient.api.zzd interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+					 */
+					public constructor(implementation: {
+					});
+					public constructor();
 				}
 			}
 		}
@@ -878,6 +901,12 @@ declare namespace com {
 			export namespace api {
 				export class zze {
 					public static class: java.lang.Class<com.android.billingclient.api.zze>;
+					/**
+					 * Constructs a new instance of the com.android.billingclient.api.zze interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+					 */
+					public constructor(implementation: {
+					});
+					public constructor();
 				}
 			}
 		}
@@ -902,7 +931,7 @@ declare namespace com {
 			export namespace api {
 				export class zzg {
 					public static class: java.lang.Class<com.android.billingclient.api.zzg>;
-					public run(): void;
+					public onReceive(param0: globalAndroid.content.Context, param1: globalAndroid.content.Intent): void;
 				}
 			}
 		}
@@ -913,7 +942,7 @@ declare namespace com {
 	export namespace android {
 		export namespace billingclient {
 			export namespace api {
-				export class zzh extends java.util.concurrent.Callable<java.lang.Void> {
+				export class zzh {
 					public static class: java.lang.Class<com.android.billingclient.api.zzh>;
 				}
 			}
@@ -927,7 +956,6 @@ declare namespace com {
 			export namespace api {
 				export class zzi {
 					public static class: java.lang.Class<com.android.billingclient.api.zzi>;
-					public run(): void;
 				}
 			}
 		}
@@ -951,8 +979,9 @@ declare namespace com {
 	export namespace android {
 		export namespace billingclient {
 			export namespace api {
-				export class zzk extends java.util.concurrent.Callable<java.lang.Void> {
+				export class zzk {
 					public static class: java.lang.Class<com.android.billingclient.api.zzk>;
+					public call(): any;
 				}
 			}
 		}
@@ -965,7 +994,7 @@ declare namespace com {
 			export namespace api {
 				export class zzl {
 					public static class: java.lang.Class<com.android.billingclient.api.zzl>;
-					public run(): void;
+					public call(): any;
 				}
 			}
 		}
@@ -978,7 +1007,7 @@ declare namespace com {
 			export namespace api {
 				export class zzm {
 					public static class: java.lang.Class<com.android.billingclient.api.zzm>;
-					public run(): void;
+					public call(): any;
 				}
 			}
 		}
@@ -991,7 +1020,7 @@ declare namespace com {
 			export namespace api {
 				export class zzn {
 					public static class: java.lang.Class<com.android.billingclient.api.zzn>;
-					public run(): void;
+					public call(): any;
 				}
 			}
 		}
@@ -1002,8 +1031,9 @@ declare namespace com {
 	export namespace android {
 		export namespace billingclient {
 			export namespace api {
-				export class zzo extends java.util.concurrent.Callable<java.lang.Void> {
+				export class zzo {
 					public static class: java.lang.Class<com.android.billingclient.api.zzo>;
+					public call(): any;
 				}
 			}
 		}
@@ -1016,7 +1046,7 @@ declare namespace com {
 			export namespace api {
 				export class zzp {
 					public static class: java.lang.Class<com.android.billingclient.api.zzp>;
-					public run(): void;
+					public call(): any;
 				}
 			}
 		}
@@ -1029,7 +1059,7 @@ declare namespace com {
 			export namespace api {
 				export class zzq {
 					public static class: java.lang.Class<com.android.billingclient.api.zzq>;
-					public newThread(param0: java.lang.Runnable): java.lang.Thread;
+					public run(): void;
 				}
 			}
 		}
@@ -1053,8 +1083,9 @@ declare namespace com {
 	export namespace android {
 		export namespace billingclient {
 			export namespace api {
-				export class zzs extends java.util.concurrent.Callable<globalAndroid.os.Bundle> {
+				export class zzs {
 					public static class: java.lang.Class<com.android.billingclient.api.zzs>;
+					public run(): void;
 				}
 			}
 		}
@@ -1065,8 +1096,9 @@ declare namespace com {
 	export namespace android {
 		export namespace billingclient {
 			export namespace api {
-				export class zzt extends java.util.concurrent.Callable<java.lang.Integer> {
+				export class zzt {
 					public static class: java.lang.Class<com.android.billingclient.api.zzt>;
+					public run(): void;
 				}
 			}
 		}
@@ -1118,6 +1150,19 @@ declare namespace com {
 			export namespace api {
 				export class zzx {
 					public static class: java.lang.Class<com.android.billingclient.api.zzx>;
+					public call(): any;
+				}
+			}
+		}
+	}
+}
+
+declare namespace com {
+	export namespace android {
+		export namespace billingclient {
+			export namespace api {
+				export class zzy {
+					public static class: java.lang.Class<com.android.billingclient.api.zzy>;
 					public onReceiveResult(param0: number, param1: globalAndroid.os.Bundle): void;
 				}
 			}
@@ -1129,19 +1174,7 @@ declare namespace com {
 	export namespace android {
 		export namespace billingclient {
 			export namespace api {
-				export class zzy extends java.util.concurrent.Callable<globalAndroid.os.Bundle> {
-					public static class: java.lang.Class<com.android.billingclient.api.zzy>;
-				}
-			}
-		}
-	}
-}
-
-declare namespace com {
-	export namespace android {
-		export namespace billingclient {
-			export namespace api {
-				export class zzz extends java.util.concurrent.Callable<globalAndroid.os.Bundle> {
+				export class zzz extends java.util.concurrent.Callable<com.android.billingclient.api.Purchase.PurchasesResult> {
 					public static class: java.lang.Class<com.android.billingclient.api.zzz>;
 				}
 			}
@@ -1210,19 +1243,18 @@ declare namespace com {
 							 */
 							public constructor(implementation: {
 								zza(param0: number, param1: string, param2: string): number;
-								zzb(param0: number, param1: string, param2: string, param3: globalAndroid.os.Bundle): globalAndroid.os.Bundle;
-								zzc(param0: number, param1: string, param2: string, param3: string, param4: string): globalAndroid.os.Bundle;
-								zzd(param0: number, param1: string, param2: string, param3: string): globalAndroid.os.Bundle;
-								zze(param0: number, param1: string, param2: string): number;
-								zzf(param0: number, param1: string, param2: java.util.List<string>, param3: string, param4: string, param5: string): globalAndroid.os.Bundle;
+								zzb(param0: number, param1: string, param2: string): number;
+								zzc(param0: number, param1: string, param2: string, param3: globalAndroid.os.Bundle): number;
+								zzd(param0: number, param1: string, param2: string, param3: globalAndroid.os.Bundle): globalAndroid.os.Bundle;
+								zze(param0: number, param1: string, param2: string, param3: globalAndroid.os.Bundle): globalAndroid.os.Bundle;
+								zzf(param0: number, param1: string, param2: string, param3: string, param4: string): globalAndroid.os.Bundle;
 								zzg(param0: number, param1: string, param2: string, param3: string, param4: string, param5: globalAndroid.os.Bundle): globalAndroid.os.Bundle;
 								zzh(param0: number, param1: string, param2: string, param3: string, param4: globalAndroid.os.Bundle): globalAndroid.os.Bundle;
-								zzi(param0: number, param1: string, param2: string, param3: globalAndroid.os.Bundle): number;
+								zzi(param0: number, param1: string, param2: string, param3: string): globalAndroid.os.Bundle;
 								zzj(param0: number, param1: string, param2: string, param3: string, param4: globalAndroid.os.Bundle): globalAndroid.os.Bundle;
-								zzk(param0: number, param1: string, param2: string, param3: string, param4: globalAndroid.os.Bundle): globalAndroid.os.Bundle;
-								zzl(param0: number, param1: string, param2: string, param3: globalAndroid.os.Bundle): globalAndroid.os.Bundle;
-								zzm(param0: number, param1: string, param2: string, param3: globalAndroid.os.Bundle, param4: globalAndroid.os.Bundle): globalAndroid.os.Bundle;
-								zzn(param0: number, param1: string, param2: string, param3: globalAndroid.os.Bundle): globalAndroid.os.Bundle;
+								zzk(param0: number, param1: string, param2: string, param3: globalAndroid.os.Bundle): globalAndroid.os.Bundle;
+								zzl(param0: number, param1: string, param2: string, param3: globalAndroid.os.Bundle, param4: globalAndroid.os.Bundle): globalAndroid.os.Bundle;
+								zzm(param0: number, param1: string, param2: string, param3: string, param4: globalAndroid.os.Bundle): globalAndroid.os.Bundle;
 							});
 							public constructor();
 						}
@@ -1285,5 +1317,257 @@ declare namespace com {
 	}
 }
 
+declare namespace com {
+	export namespace google {
+		export namespace android {
+			export namespace gms {
+				export namespace internal {
+					export namespace play_billing {
+						export class zzh {
+							public static class: java.lang.Class<com.google.android.gms.internal.play_billing.zzh>;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare namespace com {
+	export namespace google {
+		export namespace android {
+			export namespace gms {
+				export namespace internal {
+					export namespace play_billing {
+						export class zzi extends com.google.android.gms.internal.play_billing.zzh {
+							public static class: java.lang.Class<com.google.android.gms.internal.play_billing.zzi>;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare namespace com {
+	export namespace google {
+		export namespace android {
+			export namespace gms {
+				export namespace internal {
+					export namespace play_billing {
+						export class zzj {
+							public static class: java.lang.Class<com.google.android.gms.internal.play_billing.zzj>;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare namespace com {
+	export namespace google {
+		export namespace android {
+			export namespace gms {
+				export namespace internal {
+					export namespace play_billing {
+						export class zzk {
+							public static class: java.lang.Class<com.google.android.gms.internal.play_billing.zzk>;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare namespace com {
+	export namespace google {
+		export namespace android {
+			export namespace gms {
+				export namespace internal {
+					export namespace play_billing {
+						export abstract class zzl<E>  extends java.lang.Object /* com.google.android.gms.internal.play_billing.zzs<any>*/ {
+							public static class: java.lang.Class<com.google.android.gms.internal.play_billing.zzl<any>>;
+							public constructor();
+							public previousIndex(): number;
+							public previous(): any;
+							public constructor(param0: number, param1: number);
+							public nextIndex(): number;
+							public hasNext(): boolean;
+							public hasPrevious(): boolean;
+							public next(): any;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare namespace com {
+	export namespace google {
+		export namespace android {
+			export namespace gms {
+				export namespace internal {
+					export namespace play_billing {
+						export abstract class zzm<E>  extends java.util.AbstractCollection<any> implements java.io.Serializable  {
+							public static class: java.lang.Class<com.google.android.gms.internal.play_billing.zzm<any>>;
+							/** @deprecated */
+							public addAll(param0: java.util.Collection<any>): boolean;
+							/** @deprecated */
+							public add(param0: any): boolean;
+							/** @deprecated */
+							public remove(param0: any): boolean;
+							/** @deprecated */
+							public clear(): void;
+							public toArray(): androidNative.Array<any>;
+							/** @deprecated */
+							public retainAll(param0: java.util.Collection<any>): boolean;
+							/** @deprecated */
+							public removeAll(param0: java.util.Collection<any>): boolean;
+							public toArray(param0: androidNative.Array<any>): androidNative.Array<any>;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare namespace com {
+	export namespace google {
+		export namespace android {
+			export namespace gms {
+				export namespace internal {
+					export namespace play_billing {
+						export class zzn<E>  extends java.lang.Object /* com.google.android.gms.internal.play_billing.zzl<any>*/ {
+							public static class: java.lang.Class<com.google.android.gms.internal.play_billing.zzn<any>>;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare namespace com {
+	export namespace google {
+		export namespace android {
+			export namespace gms {
+				export namespace internal {
+					export namespace play_billing {
+						export class zzo extends com.google.android.gms.internal.play_billing.zzp<any> {
+							public static class: java.lang.Class<com.google.android.gms.internal.play_billing.zzo>;
+							public size(): number;
+							public get(param0: number): any;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare namespace com {
+	export namespace google {
+		export namespace android {
+			export namespace gms {
+				export namespace internal {
+					export namespace play_billing {
+						export abstract class zzp<E>  extends java.lang.Object /* com.google.android.gms.internal.play_billing.zzm<any>*/ {
+							public static class: java.lang.Class<com.google.android.gms.internal.play_billing.zzp<any>>;
+							public contains(param0: any): boolean;
+							/** @deprecated */
+							public addAll(param0: java.util.Collection<any>): boolean;
+							/** @deprecated */
+							public add(param0: any): boolean;
+							public hashCode(): number;
+							public lastIndexOf(param0: any): number;
+							/** @deprecated */
+							public addAll(param0: number, param1: java.util.Collection<any>): boolean;
+							/** @deprecated */
+							public remove(param0: any): boolean;
+							/** @deprecated */
+							public remove(param0: number): any;
+							public indexOf(param0: any): number;
+							/** @deprecated */
+							public add(param0: number, param1: any): void;
+							public equals(param0: any): boolean;
+							/** @deprecated */
+							public set(param0: number, param1: any): any;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare namespace com {
+	export namespace google {
+		export namespace android {
+			export namespace gms {
+				export namespace internal {
+					export namespace play_billing {
+						export class zzq<E>  extends java.lang.Object /* com.google.android.gms.internal.play_billing.zzp<any>*/ {
+							public static class: java.lang.Class<com.google.android.gms.internal.play_billing.zzq<any>>;
+							public size(): number;
+							public get(param0: number): any;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare namespace com {
+	export namespace google {
+		export namespace android {
+			export namespace gms {
+				export namespace internal {
+					export namespace play_billing {
+						export abstract class zzr<E>  extends java.util.Iterator<any> {
+							public static class: java.lang.Class<com.google.android.gms.internal.play_billing.zzr<any>>;
+							public constructor();
+							/** @deprecated */
+							public remove(): void;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare namespace com {
+	export namespace google {
+		export namespace android {
+			export namespace gms {
+				export namespace internal {
+					export namespace play_billing {
+						export abstract class zzs<E>  extends java.lang.Object /* com.google.android.gms.internal.play_billing.zzr<any>*/ implements java.util.ListIterator<any>  {
+							public static class: java.lang.Class<com.google.android.gms.internal.play_billing.zzs<any>>;
+							public constructor();
+							/** @deprecated */
+							public add(param0: any): void;
+							/** @deprecated */
+							public set(param0: any): void;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
 //Generics information:
+//com.google.android.gms.internal.play_billing.zzl:1
+//com.google.android.gms.internal.play_billing.zzm:1
+//com.google.android.gms.internal.play_billing.zzn:1
+//com.google.android.gms.internal.play_billing.zzp:1
+//com.google.android.gms.internal.play_billing.zzq:1
+//com.google.android.gms.internal.play_billing.zzr:1
+//com.google.android.gms.internal.play_billing.zzs:1
 

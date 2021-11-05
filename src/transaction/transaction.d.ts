@@ -7,13 +7,7 @@ export class Transaction {
     public date: Date;
 
     /**
-     * Gets the transaction error.
-     */
-    public error: PurchaseError;
-
-    /**
      * Gets the unique order identifier for the transaction.
-     * @summary On Android returns null if the transaction was restored.
      */
     public id: string;
 
@@ -23,57 +17,26 @@ export class Transaction {
     public state: TransactionState;
 
     /**
-     * Gets the product Id.
+     * Gets the product ID.
      */
-    public productId: string;
+    public productId: string[];
 
-    constructor(nativeValue: any);
+    /**
+     * Gets the quantity of the purchased product.
+     */
+    public quantity: string[];
+
+    constructor(nativeObject: any);
 }
 
 /**
  * Represents the states of transaction.
  */
 export enum TransactionState {
-	purchasing = 0,
-	purchased = 1,
-	failed = 2,
-	restored = 3,
-	deferred = 4,
-    refunded = 5
-}
-
-/**
- * Represents the error codes for PurchaseError.
- */
-export enum PurchaseErrorCode {
-    /**
-     * Unknow error during the API action.
-     */
-    unknown = 0,
-
-    /**
-     * User pressed back or canceled a dialog.
-     */
-    canceled = 1,
-
-    /**
-     * Android only: Failure to purchase since item is already owned.
-     */
-    itemAlreadyOwned = 2,
-
-    /**
-     * Requested product is not available for purchase.
-     */
-    itemUnavailable = 3,
-
-    /**
-     * iOS only: The user is not allowed to authorize payments.
-     */
-    userNotAuthorized = 4
-}
-
-export class PurchaseError extends Error {
-    public code: number;
-
-    constructor(code: PurchaseErrorCode, message: string);
+	purchasing = "purchasing",
+	purchased = "purchased",
+	failed = "failed",
+	restored = "restored",
+	deferred = "deferred",
+    refunded = "refunded"
 }

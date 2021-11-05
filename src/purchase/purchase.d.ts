@@ -2,6 +2,43 @@ import { EventData, Observable } from "@nativescript/core";
 import { Product } from "../product/product";
 import { Transaction } from "../transaction/transaction";
 
+/**
+ * Represents the error codes for PurchaseError.
+ */
+export enum PurchaseErrorCode {
+    /**
+     * Unknow error during the API action.
+     */
+    unknown = "unknown",
+
+    /**
+     * User pressed back or canceled a dialog.
+     */
+    canceled = "canceled",
+
+    /**
+     * Android only: Failure to purchase since item is already owned.
+     */
+    itemAlreadyOwned = "item_already_owned",
+
+    /**
+     * Requested product is not available for purchase.
+     */
+    itemUnavailable = "item_unavailable",
+
+    /**
+     * iOS only: The user is not allowed to authorize payments.
+     */
+    userNotAuthorized = "user_not_authorized"
+}
+
+export class PurchaseError extends Error {
+    public code: PurchaseErrorCode;
+    public nativeError: any;
+
+    constructor(code: PurchaseErrorCode, message: string, nativeError?: any);
+}
+
 export interface PurchaseEventData extends EventData {
     transactions: Transaction[];
 }
@@ -36,7 +73,7 @@ export class InAppPurchase extends Observable {
      * Initiates the purchase for a product.
      * @param product Purchased product.
      */
-    public purchase(product: Product): void;
+    public purchase(product: Product): Promise<void>;
 
     /**
      * Restores previously completed purchases.

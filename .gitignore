@@ -2,6 +2,7 @@
 *.js
 !**/postinstall-hooks.js
 !**/preuninstall.js
+!**/package/scripts/*.js
 *.js.map
 **/node_modules
 package/**/*.d.ts
@@ -9,4 +10,5 @@ demos/**/hooks
 demos/**/platforms
 !demos/**/*.js
 *.aar
-.vscode
+.vscode/*
+!**/.vscode/launch.json

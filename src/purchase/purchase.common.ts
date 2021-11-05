@@ -2,6 +2,25 @@ import { EventData, Observable } from "@nativescript/core";
 import { Transaction } from "../transaction/transaction";
 import { Product } from "../product/product";
 
+export enum PurchaseErrorCode {
+    unknown = "unknown",
+    canceled = "canceled",
+    itemAlreadyOwned = "item_already_owned",
+    itemUnavailable = "item_unavailable",
+    userNotAuthorized = "user_not_authorized"
+}
+
+export class PurchaseError extends Error {
+    public code: PurchaseErrorCode;
+    public nativeError: any;
+
+    constructor(code: PurchaseErrorCode, message: string, nativeError?: any) {
+        super(message);
+        this.code = code;
+        this.nativeError = nativeError;
+    }
+}
+
 export interface PurchaseEventData extends EventData {
     transactions: Transaction[];
 }

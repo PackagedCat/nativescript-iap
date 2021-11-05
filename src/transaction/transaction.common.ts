@@ -1,39 +1,44 @@
-export class TransactionBase {
-    public nativeObject: any;
+export abstract class TransactionBase<T> {
+    public _nativeObject: T;
+    public get nativeObject() {
+        return this._nativeObject;
+    }
 
-    public date: Date;
-    public error: PurchaseError;
-    public id: string;
-    public state: TransactionState;
-    public productId: string;
+    protected _date!: Date;
+    public get date() {
+        return this._date;
+    }
+    
+    protected _id!: string;
+    public get id() {
+        return this._id;
+    }
 
-    constructor(nativeObject: any) {
-        this.nativeObject = nativeObject;
+    protected _state!: TransactionState;
+    public get state() {
+        return this._state;
+    }
+
+    protected _productId!: string;
+    public get productId() {
+        return this._productId;
+    }
+
+    protected _quantity!: number;
+    public get quantity() {
+        return this._quantity;
+    }
+
+    constructor(nativeObject: T) {
+        this._nativeObject = nativeObject;
     }
 }
 
 export enum TransactionState {
-	purchasing = 0,
-	purchased = 1,
-	failed = 2,
-	restored = 3,
-	deferred = 4,
-    refunded = 5
-}
-
-export enum PurchaseErrorCode {
-    unknown = 0,
-    canceled = 1,
-    itemAlreadyOwned = 2,
-    itemUnavailable = 3,
-    userNotAuthorized = 4
-}
-
-export class PurchaseError extends Error {
-    public code: number;
-
-    constructor(code: PurchaseErrorCode, message: string) {
-        super(message);
-        this.code = code;
-    }
+	purchasing = "purchasing",
+	purchased = "purchased",
+	failed = "failed",
+	restored = "restored",
+	deferred = "deferred",
+    refunded = "refunded"
 }

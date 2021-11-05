@@ -1,67 +1,40 @@
-import { PurchaseError, PurchaseErrorCode, TransactionBase, TransactionState } from "./transaction.common";
+import { TransactionBase, TransactionState } from "./transaction.common";
 
 export * from "./transaction.common";
 
-export class Transaction extends TransactionBase {
-    constructor(nativeValue: SKPaymentTransaction) {
-        super(nativeValue);
+export class Transaction extends TransactionBase<SKPaymentTransaction> {
+    constructor(nativeObject: SKPaymentTransaction) {
+        super(nativeObject);
 
-        if (nativeValue.transactionDate) {
-            this.date = nativeValue.transactionDate;
+        if (nativeObject.originalTransaction) {
+            this._date = nativeObject.originalTransaction.transactionDate;
+        } else {
+            this._date = nativeObject.transactionDate;
         }
 
-        switch (nativeValue.transactionState) {
+        this._id = nativeObject.transactionIdentifier;
+
+        switch (nativeObject.transactionState) {
             case SKPaymentTransactionState.Deferred:
-                this.state = TransactionState.deferred;
+                this._state = TransactionState.deferred;
                 break;
-
             case SKPaymentTransactionState.Failed:
-                this.state = TransactionState.failed;
-                this.error = this.convertNativeError(nativeValue.error);
+                this._state = TransactionState.failed;
                 break;
-
             case SKPaymentTransactionState.Purchased:
-                this.state = TransactionState.purchased;
+                this._state = TransactionState.purchased;
                 break;
-
             case SKPaymentTransactionState.Purchasing:
-                this.state = TransactionState.purchasing;
+                this._state = TransactionState.purchasing;
                 break;
-
             case SKPaymentTransactionState.Restored:
-                this.state = TransactionState.restored;
-                this.date = nativeValue.originalTransaction.transactionDate;
+                this._state = TransactionState.restored;
                 break;
         }
 
-        if (nativeValue.payment) {
-            this.productId = nativeValue.payment.productIdentifier;
+        if (nativeObject.payment) {
+            this._productId = nativeObject.payment.productIdentifier;
+            this._quantity = nativeObject.payment.quantity;
         }
-
-        this.id = nativeValue.transactionIdentifier;
-    }
-
-    private convertNativeError(nativeError: NSError) {
-        let error = new PurchaseError(
-            PurchaseErrorCode.unknown,
-            "Unknow error"
-        );
-
-        switch (nativeError.code) {
-            case SKErrorCode.PaymentCancelled:
-                error = new PurchaseError(
-                    PurchaseErrorCode.canceled,
-                    nativeError.description
-                );
-                break;
-            case SKErrorCode.StoreProductNotAvailable:
-                error = new PurchaseError(
-                    PurchaseErrorCode.itemUnavailable,
-                    nativeError.description
-                );
-                break;
-        }
-
-        return error;
     }
 }

@@ -1,7 +1,7 @@
 import { Application, Utils } from "@nativescript/core";
-import { InAppPurchaseBase, PurchaseEventData } from "./purchase.common";
+import { InAppPurchaseBase, PurchaseError, PurchaseErrorCode, PurchaseEventData } from "./purchase.common";
 import { Product } from "../product/product";
-import { PurchaseError, PurchaseErrorCode, Transaction, TransactionState } from "../transaction/transaction";
+import { Transaction, TransactionState } from "../transaction/transaction";
 
 export * from "./purchase.common";
 
@@ -9,12 +9,15 @@ const context = Utils.ad.getApplicationContext();
 
 export class InAppPurchase extends InAppPurchaseBase {
     public nativeObject: com.android.billingclient.api.BillingClient;
+    
+    private _purchasePromiseResolve?: (value: void | PromiseLike<void>) => void;
+    private _purchasePromiseReject?: (reason?: any) => void;
 
     constructor() {
         super();
 
         const purchasesUpdatedListener = new com.android.billingclient.api.PurchasesUpdatedListener({
-            onPurchasesUpdated: this.onPurchasesUpdated.bind(this)
+            onPurchasesUpdated: this.onNativePurchasesUpdated.bind(this)
         });
 
         this.nativeObject = com.android.billingclient.api.BillingClient.newBuilder(context)
@@ -25,67 +28,81 @@ export class InAppPurchase extends InAppPurchaseBase {
 
     //#region Native methods
 
-    private async onPurchasesUpdated(billingResult: com.android.billingclient.api.BillingResult, purchases: java.util.List<com.android.billingclient.api.Purchase>) {
-        if (billingResult.getResponseCode() == com.android.billingclient.api.BillingClient.BillingResponseCode.OK && purchases != null) {
-            const nativeTransactions = purchases.toArray();
-            const transactions = new Array<Transaction>();
-    
-            for (let i = 0; i < nativeTransactions.length; i++) {
-                const transaction = new Transaction(nativeTransactions[i]);
-                switch (billingResult.getResponseCode()) {
-                    case com.android.billingclient.api.BillingClient.BillingResponseCode.USER_CANCELED:
-                        transaction.error = new PurchaseError(
-                            PurchaseErrorCode.canceled,
-                            billingResult.getDebugMessage() ?? "User canceled");
-                        break;
-                    case com.android.billingclient.api.BillingClient.BillingResponseCode.ITEM_ALREADY_OWNED:
-                        transaction.error = new PurchaseError(
-                            PurchaseErrorCode.itemAlreadyOwned,
-                            billingResult.getDebugMessage() ?? "Item already owned");
-                        break;
-                    case com.android.billingclient.api.BillingClient.BillingResponseCode.ITEM_UNAVAILABLE:
-                        transaction.error = new PurchaseError(
-                            PurchaseErrorCode.itemUnavailable,
-                            billingResult.getDebugMessage() ?? "Item unavailable");
-                        break;
+    private async onNativePurchasesUpdated(billingResult: com.android.billingclient.api.BillingResult, purchases: java.util.List<com.android.billingclient.api.Purchase>) {
+        switch (billingResult.getResponseCode()) {
+            case com.android.billingclient.api.BillingClient.BillingResponseCode.OK:
+                if (purchases != null) {
+                    const nativeTransactions = purchases.toArray();
+                    const transactions = new Array<Transaction>();
+        
+                    for (let i = 0; i < nativeTransactions.length; i++) {
+                        const transaction = new Transaction(nativeTransactions[i]);
+                        transactions.push(transaction);
+                    }
+        
+                    this._purchasePromiseResolve?.();
+        
+                    this.notify({
+                        eventName: InAppPurchase.purchaseUpdatedEvent,
+                        object: this,
+                        transactions: transactions
+                    } as PurchaseEventData);
                 }
-    
-                transactions.push(transaction);
-            }
-    
-            this.notify({
-                eventName: InAppPurchase.purchaseUpdatedEvent,
-                object: this,
-                transactions: transactions
-            } as PurchaseEventData);
-
-        } else if (billingResult.getResponseCode() == com.android.billingclient.api.BillingClient.BillingResponseCode.USER_CANCELED) {
-            // Handle an error caused by a user cancelling the purchase flow.
-            this.notify({
-                eventName: InAppPurchase.purchaseUpdatedEvent,
-                object: this,
-                transactions: [{
-                    state: TransactionState.failed,
-                    error: new PurchaseError(PurchaseErrorCode.canceled, billingResult.getDebugMessage())
-                }]
-            });
-        } else {
-            // Handle any other error codes.
+                break;
+            case com.android.billingclient.api.BillingClient.BillingResponseCode.USER_CANCELED:
+                this._purchasePromiseReject?.(new PurchaseError(
+                    PurchaseErrorCode.canceled,
+                    billingResult.getDebugMessage() || "User canceled",
+                    billingResult
+                ));
+                break;
+            case com.android.billingclient.api.BillingClient.BillingResponseCode.ITEM_ALREADY_OWNED:
+                this._purchasePromiseReject?.(new PurchaseError(
+                    PurchaseErrorCode.itemAlreadyOwned,
+                    billingResult.getDebugMessage() || "Item already owned",
+                    billingResult
+                ));
+                break;
+            case com.android.billingclient.api.BillingClient.BillingResponseCode.ITEM_UNAVAILABLE:
+                this._purchasePromiseReject?.(new PurchaseError(
+                    PurchaseErrorCode.itemUnavailable,
+                    billingResult.getDebugMessage() || "Item unavailable",
+                    billingResult
+                ));
+                break;
+            case com.android.billingclient.api.BillingClient.BillingResponseCode.SERVICE_DISCONNECTED:
+            case com.android.billingclient.api.BillingClient.BillingResponseCode.SERVICE_UNAVAILABLE:
+            case com.android.billingclient.api.BillingClient.BillingResponseCode.BILLING_UNAVAILABLE:
+            case com.android.billingclient.api.BillingClient.BillingResponseCode.DEVELOPER_ERROR:
+            case com.android.billingclient.api.BillingClient.BillingResponseCode.ERROR:
+                this._purchasePromiseReject?.(new PurchaseError(
+                    PurchaseErrorCode.unknown,
+                    billingResult.getDebugMessage() || "Unknow error",
+                    billingResult
+                ));
+                break;
         }
+
+        this._purchasePromiseResolve = undefined;
+        this._purchasePromiseReject = undefined;
     }
 
-    private async connectAsync() {
-        return new Promise<boolean>((resolve, reject) => {
+    private connectAsync() {
+        return new Promise<void>((resolve, reject) => {
             if (this.nativeObject.isReady()) {
-                return resolve(true);
+                return resolve();
             }
 
             this.nativeObject.startConnection(new com.android.billingclient.api.BillingClientStateListener({
                 onBillingSetupFinished(billingResult) {
                     if (billingResult.getResponseCode() === com.android.billingclient.api.BillingClient.BillingResponseCode.OK) {
-                        resolve(true);
+                        resolve();
                     } else {
-                        reject(billingResult.getDebugMessage());
+                        reject(new PurchaseError(
+                            PurchaseErrorCode.unknown,
+                            billingResult.getDebugMessage() || "Unknow error",
+                            billingResult
+                        ));
                     }
                 },
                 onBillingServiceDisconnected() {
@@ -110,7 +127,11 @@ export class InAppPurchase extends InAppPurchaseBase {
                             const nativeProducts = skuDetailsList.toArray();                            
                             resolve(nativeProducts);
                         } else {
-                            reject(billingResult.getDebugMessage());
+                            reject(new PurchaseError(
+                                PurchaseErrorCode.unknown,
+                                billingResult.getDebugMessage() || "Unknow error",
+                                billingResult
+                            ));
                         }
                     }
                 }));
@@ -127,7 +148,11 @@ export class InAppPurchase extends InAppPurchaseBase {
                             const nativeHistory = purchaseHistoryRecordList.toArray();                            
                             resolve(nativeHistory);
                         } else {
-                            reject(billingResult.getDebugMessage());
+                            reject(new PurchaseError(
+                                PurchaseErrorCode.unknown,
+                                billingResult.getDebugMessage() || "Unknow error",
+                                billingResult
+                            ));
                         }
                     }
                 }));
@@ -138,6 +163,10 @@ export class InAppPurchase extends InAppPurchaseBase {
 
     public finishTransaction(transaction: Transaction): Promise<void> {
         return new Promise<void>((resolve, reject) => {
+            this.connectAsync()
+                .then(resolve)
+                .catch(reject);
+
             if (transaction.state === TransactionState.restored) {
                 resolve();
                 return;
@@ -154,10 +183,11 @@ export class InAppPurchase extends InAppPurchaseBase {
                         if (billingResult.getResponseCode() === com.android.billingclient.api.BillingClient.BillingResponseCode.OK) {
                             resolve();
                         } else {
-                            reject({
-                                code: billingResult.getResponseCode(),
-                                error: billingResult.getDebugMessage()
-                            });
+                            reject(new PurchaseError(
+                                PurchaseErrorCode.unknown,
+                                billingResult.getDebugMessage() || "Unknow error",
+                                billingResult
+                            ));
                         }
                     }
                 }));
@@ -166,6 +196,10 @@ export class InAppPurchase extends InAppPurchaseBase {
 
     public consumePurchase(transaction: Transaction): Promise<void> {
         return new Promise<void>((resolve, reject) => {
+            this.connectAsync()
+                .then(resolve)
+                .catch(reject);
+
             const consumeParams = com.android.billingclient.api.ConsumeParams.newBuilder()
                 .setPurchaseToken(transaction.nativeObject.getPurchaseToken())
                 .build();
@@ -177,10 +211,11 @@ export class InAppPurchase extends InAppPurchaseBase {
                         if (billingResult.getResponseCode() === com.android.billingclient.api.BillingClient.BillingResponseCode.OK) {
                             resolve();
                         } else {
-                            reject({ 
-                                code: billingResult.getResponseCode(),
-                                error: billingResult.getDebugMessage()
-                            });
+                            reject(new PurchaseError(
+                                PurchaseErrorCode.unknown,
+                                billingResult.getDebugMessage() || "Unknow error",
+                                billingResult
+                            ));
                         }
                     }
                 }));
@@ -205,15 +240,22 @@ export class InAppPurchase extends InAppPurchaseBase {
         return products;
     }
 
-    public async purchase(product: Product): Promise<void> {
-        await this.connectAsync();
+    public purchase(product: Product): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+            this.connectAsync()
+                .then(resolve)
+                .catch(reject);
 
-        const billingFlowParams = com.android.billingclient.api.BillingFlowParams.newBuilder()
-            .setSkuDetails(product.nativeObject)
-            .build();
+            this._purchasePromiseResolve = resolve;
+            this._purchasePromiseReject = reject;
 
-        const activity = Application.android.foregroundActivity || Application.android.startActivity;
-        this.nativeObject.launchBillingFlow(activity, billingFlowParams);
+            const billingFlowParams = com.android.billingclient.api.BillingFlowParams.newBuilder()
+                .setSkuDetails(product.nativeObject)
+                .build();
+    
+            const activity = Application.android.foregroundActivity || Application.android.startActivity;
+            this.nativeObject.launchBillingFlow(activity, billingFlowParams);
+        });
     }
 
     public async restorePurchases(): Promise<void> {
@@ -238,8 +280,12 @@ export class InAppPurchase extends InAppPurchaseBase {
         });
     }
 
-    public async showPriceConsent(product?: Product): Promise<void> {
+    public showPriceConsent(product?: Product): Promise<void> {
         return new Promise<void>((resolve, reject) => {
+            this.connectAsync()
+                .then(resolve)
+                .catch(reject);
+    
             if (product == null) {
                 reject("The parameter \"product\" must not be null.");
                 return;
@@ -256,7 +302,11 @@ export class InAppPurchase extends InAppPurchaseBase {
                         if (billingResult.getResponseCode() === com.android.billingclient.api.BillingClient.BillingResponseCode.OK) {
                             resolve();
                         } else {
-                            reject(billingResult.getDebugMessage());
+                            reject(new PurchaseError(
+                                PurchaseErrorCode.unknown,
+                                billingResult.getDebugMessage() || "Unknow error",
+                                billingResult
+                            ));
                         }
                     }
                 }));

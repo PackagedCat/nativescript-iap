@@ -57,7 +57,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import inAppPurchase, { PurchaseEventData, Product, PurchaseError, TransactionState } from "nativescript-iap";
+import inAppPurchase, { PurchaseEventData, Product, PurchaseError, TransactionState, PurchaseErrorCode } from "nativescript-iap";
 
 export default Vue.extend({
     data() {
@@ -89,6 +89,27 @@ export default Vue.extend({
                 await inAppPurchase.purchase(args.item);
             } catch (error) {
                 if (error instanceof PurchaseError) {
+                    switch (error.code) {
+                        case PurchaseErrorCode.unknown:
+                            // ...
+                            break;
+                        case PurchaseErrorCode.canceled:
+                            // ...
+                            break;
+                        case PurchaseErrorCode.itemAlreadyOwned: // On Android only
+                            // ...
+                            break;
+                        case PurchaseErrorCode.itemUnavailable: // On Android only
+                            // ...
+                            break;
+                        case PurchaseErrorCode.userNotAuthorized: // On iOS only
+                            // ...
+                            break;
+                        default: //Unknow error
+                            // ...
+                            break;
+                    }
+
                     alert(error.message);
                 } else {
                     console.error(error);

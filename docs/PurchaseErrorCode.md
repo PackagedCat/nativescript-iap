@@ -49,7 +49,7 @@ User pressed back or canceled a dialog.
 <td>
 
 ```typescript
-productlreadyOwned: "product_already_owned"
+productAlreadyOwned: "product_already_owned"
 ```
 </td>
 

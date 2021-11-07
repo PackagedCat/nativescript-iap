@@ -49,7 +49,7 @@ User pressed back or canceled a dialog.
 <td>
 
 ```typescript
-itemAlreadyOwned: "item_already_owned"
+productlreadyOwned: "product_already_owned"
 ```
 </td>
 
@@ -66,7 +66,7 @@ Failure to purchase since item is already owned.
 <td>
 
 ```typescript
-itemUnavailable: "item_unavailable"
+productUnavailable: "product_not_available"
 ```
 </td>
 

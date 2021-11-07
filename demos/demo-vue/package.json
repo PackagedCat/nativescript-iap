@@ -9,7 +9,6 @@
     "@nativescript/core": "^8.1.5",
     "@nativescript/theme": "^2.3.3",
     "nativescript-iap": "file:../../package",
-    "nativescript-socketio": "^3.3.1",
     "nativescript-toasty": "^3.0.0-alpha.2",
     "nativescript-vue": "^2.9.0"
   },

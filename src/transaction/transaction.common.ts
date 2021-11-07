@@ -1,43 +1,24 @@
 export abstract class TransactionBase<T> {
-    public _nativeObject: T;
-    public get nativeObject() {
-        return this._nativeObject;
-    }
+    public nativeObject: T;
 
-    protected _date!: Date;
-    public get date() {
-        return this._date;
-    }
+    public date!: Date;
     
-    protected _id!: string;
-    public get id() {
-        return this._id;
-    }
+    public id!: string;
 
-    protected _state!: TransactionState;
-    public get state() {
-        return this._state;
-    }
+    public state!: TransactionState;
 
-    protected _productId!: string;
-    public get productId() {
-        return this._productId;
-    }
+    public productId!: string;
 
-    protected _quantity!: number;
-    public get quantity() {
-        return this._quantity;
-    }
+    public quantity!: number;
 
     constructor(nativeObject: T) {
-        this._nativeObject = nativeObject;
+        this.nativeObject = nativeObject;
     }
 }
 
 export enum TransactionState {
 	purchasing = "purchasing",
 	purchased = "purchased",
-	failed = "failed",
 	restored = "restored",
 	deferred = "deferred",
     refunded = "refunded"

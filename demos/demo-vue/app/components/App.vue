@@ -17,6 +17,11 @@
                         <Label
                             class="footnote"
                             textWrap="true"
+                            :text="item.id"
+                        />
+                        <Label
+                            class="footnote"
+                            textWrap="true"
                             :text="item.description"
                         />
                     </StackLayout>
@@ -33,8 +38,9 @@
             </StackLayout>
 
             <GridLayout
-                v-if="isLoading && items.length === 0"
+                v-if="isLoading"
                 rowSpan="2"
+                backgroundColor="#00000030"
             >
                 <StackLayout
                     horizontalAlignment="center"
@@ -47,7 +53,8 @@
                     />
                     <Label
                         marginTop="10"
-                        text="Loading products..."
+                        horizontalAlignment="center"
+                        text="Loading..."
                     />
                 </StackLayout>
             </GridLayout>
@@ -77,29 +84,34 @@ export default Vue.extend({
             }
 
             this.isLoading = true;
+
             try {
-                this.items = await inAppPurchase.getProducts(["product_1", "product_2"]);
+                this.items = await inAppPurchase.getProducts(["subscription.year.autorenew"]);
             } catch (error) {
                 console.error(error);
             }
+
             this.isLoading = false;
         },
         async onItemTap(args: any) {
+            if (this.isLoading) {
+                return;
+            }
+
+            this.isLoading = true;
+
             try {
                 await inAppPurchase.purchase(args.item);
             } catch (error) {
                 if (error instanceof PurchaseError) {
                     switch (error.code) {
-                        case PurchaseErrorCode.unknown:
-                            // ...
-                            break;
                         case PurchaseErrorCode.canceled:
                             // ...
                             break;
-                        case PurchaseErrorCode.itemAlreadyOwned: // On Android only
+                        case PurchaseErrorCode.productAlreadyOwned:
                             // ...
                             break;
-                        case PurchaseErrorCode.itemUnavailable: // On Android only
+                        case PurchaseErrorCode.productUnavailable:
                             // ...
                             break;
                         case PurchaseErrorCode.userNotAuthorized: // On iOS only
@@ -112,16 +124,28 @@ export default Vue.extend({
 
                     alert(error.message);
                 } else {
-                    console.error(error);
+                    console.error("purchase", error);
                 }
             }
+
+            this.isLoading = false;
         },
         onPurchaseUpdated(data: PurchaseEventData) {
             for (const transaction of data.transactions) {
-                if (transaction.state === TransactionState.purchased) {
-                    // Delivering the content
-                } else if (transaction.state === TransactionState.failed) {
-                    console.error(transaction);
+                switch (transaction.state) {
+                    case TransactionState.purchasing:
+                        // ...
+                        break;
+                    case TransactionState.purchased:
+                    case TransactionState.restored:
+                        // Delivering the content
+                        break;
+                    case TransactionState.deferred:
+                        // ...
+                        break;
+                    case TransactionState.refunded:
+                        // ...
+                        break;
                 }
 
                 inAppPurchase.finishTransaction(transaction);
@@ -134,7 +158,11 @@ export default Vue.extend({
 
             this.isLoading = true;
 
-            await inAppPurchase.restorePurchases();
+            try {
+                await inAppPurchase.restorePurchases();
+            } catch (error) {
+                console.error(error);
+            }
 
             this.isLoading = false;
         }

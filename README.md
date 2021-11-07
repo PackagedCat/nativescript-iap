@@ -21,12 +21,20 @@ import inAppPurchase, { PurchaseEventData } from "nativescript-iap";
 
 inAppPurchase.on("purchaseUpdated", async (data: PurchaseEventData) => {
     for (const transaction of data.transactions) {
-        if (transaction.state === TransactionState.purchased
-            || transaction.state === TransactionState.restored) {
-            // Deliver the content or unlock the purchased functionality
-        } else if (transaction.state === TransactionState.failed) {
-            // Notify user about it
-            console.error(transaction.error);
+        switch (transaction.state) {
+            case TransactionState.purchasing:
+                // ...
+                break;
+            case TransactionState.purchased:
+            case TransactionState.restored:
+                // Delivering the content
+                break;
+            case TransactionState.deferred:
+                // ...
+                break;
+            case TransactionState.refunded:
+                // ...
+                break;
         }
 
         // You must finish transaction otherwise the purchase being refunded
@@ -42,7 +50,7 @@ To get the actual products call `getProducts` with array of the products identif
 ```typescript
 import inAppPurchase from "nativescript-iap";
 
-const products = await inAppPurchase.getProducts(["your.product.id", "your.product.id"]);
+const products = await inAppPurchase.getProducts(["your.product.id.1", "your.product.id.2"]);
 ```
 
 ### Purchasing the product
@@ -55,24 +63,23 @@ try {
 } catch (error) {
     if (error instanceof PurchaseError) {
         switch (error.code) {
-            case PurchaseErrorCode.unknown:
-                // ...
-                break;
-            case PurchaseErrorCode.canceled:
-                // ...
-                break;
-            case PurchaseErrorCode.itemAlreadyOwned: // On Android only
-                // ...
-                break;
-            case PurchaseErrorCode.itemUnavailable: // On Android only
-                // ...
-                break;
-            case PurchaseErrorCode.userNotAuthorized: // On iOS only
-                // ...
-                break;
-            default: //Unknow error
-                // ...
-                break;
+            switch (error.code) {
+                case PurchaseErrorCode.canceled:
+                    // ...
+                    break;
+                case PurchaseErrorCode.productAlreadyOwned:
+                    // ...
+                    break;
+                case PurchaseErrorCode.productUnavailable:
+                    // ...
+                    break;
+                case PurchaseErrorCode.userNotAuthorized: // On iOS only
+                    // ...
+                    break;
+                default: //Unknow error
+                    // ...
+                    break;
+            }
         }
     }
 

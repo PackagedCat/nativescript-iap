@@ -55,7 +55,7 @@ itemAlreadyOwned: "item_already_owned"
 
 <td>
 
-Android only: Failure to purchase since item is already owned.
+Failure to purchase since item is already owned.
 </td>
 
 </tr>

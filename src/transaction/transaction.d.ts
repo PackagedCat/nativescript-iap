@@ -35,7 +35,6 @@ export class Transaction {
 export enum TransactionState {
 	purchasing = "purchasing",
 	purchased = "purchased",
-	failed = "failed",
 	restored = "restored",
 	deferred = "deferred",
     refunded = "refunded"

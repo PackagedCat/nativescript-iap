@@ -1,5 +1,5 @@
 import { Application, Utils } from "@nativescript/core";
-import { InAppPurchaseBase, PurchaseError, PurchaseErrorCode, PurchaseEventData } from "./purchase.common";
+import { InAppPurchaseBase, PurchaseError, PurchaseErrorCode, PurchaseErrorMessage, PurchaseEventData } from "./purchase.common";
 import { Product } from "../product/product";
 import { Transaction, TransactionState } from "../transaction/transaction";
 
@@ -52,21 +52,21 @@ export class InAppPurchase extends InAppPurchaseBase {
             case com.android.billingclient.api.BillingClient.BillingResponseCode.USER_CANCELED:
                 this._purchasePromiseReject?.(new PurchaseError(
                     PurchaseErrorCode.canceled,
-                    billingResult.getDebugMessage() || "User canceled",
+                    PurchaseErrorMessage.canceled,
                     billingResult
                 ));
                 break;
             case com.android.billingclient.api.BillingClient.BillingResponseCode.ITEM_ALREADY_OWNED:
                 this._purchasePromiseReject?.(new PurchaseError(
-                    PurchaseErrorCode.itemAlreadyOwned,
-                    billingResult.getDebugMessage() || "Item already owned",
+                    PurchaseErrorCode.productAlreadyOwned,
+                    PurchaseErrorMessage.productAlreadyOwned,
                     billingResult
                 ));
                 break;
             case com.android.billingclient.api.BillingClient.BillingResponseCode.ITEM_UNAVAILABLE:
                 this._purchasePromiseReject?.(new PurchaseError(
-                    PurchaseErrorCode.itemUnavailable,
-                    billingResult.getDebugMessage() || "Item unavailable",
+                    PurchaseErrorCode.productUnavailable,
+                    PurchaseErrorMessage.productUnavailable,
                     billingResult
                 ));
                 break;
@@ -77,7 +77,7 @@ export class InAppPurchase extends InAppPurchaseBase {
             case com.android.billingclient.api.BillingClient.BillingResponseCode.ERROR:
                 this._purchasePromiseReject?.(new PurchaseError(
                     PurchaseErrorCode.unknown,
-                    billingResult.getDebugMessage() || "Unknow error",
+                    billingResult.getDebugMessage() || PurchaseErrorMessage.unknown,
                     billingResult
                 ));
                 break;
@@ -100,7 +100,7 @@ export class InAppPurchase extends InAppPurchaseBase {
                     } else {
                         reject(new PurchaseError(
                             PurchaseErrorCode.unknown,
-                            billingResult.getDebugMessage() || "Unknow error",
+                            billingResult.getDebugMessage() || PurchaseErrorMessage.unknown,
                             billingResult
                         ));
                     }
@@ -129,7 +129,7 @@ export class InAppPurchase extends InAppPurchaseBase {
                         } else {
                             reject(new PurchaseError(
                                 PurchaseErrorCode.unknown,
-                                billingResult.getDebugMessage() || "Unknow error",
+                                billingResult.getDebugMessage() || PurchaseErrorMessage.unknown,
                                 billingResult
                             ));
                         }
@@ -150,7 +150,7 @@ export class InAppPurchase extends InAppPurchaseBase {
                         } else {
                             reject(new PurchaseError(
                                 PurchaseErrorCode.unknown,
-                                billingResult.getDebugMessage() || "Unknow error",
+                                billingResult.getDebugMessage() || PurchaseErrorMessage.unknown,
                                 billingResult
                             ));
                         }
@@ -185,7 +185,7 @@ export class InAppPurchase extends InAppPurchaseBase {
                         } else {
                             reject(new PurchaseError(
                                 PurchaseErrorCode.unknown,
-                                billingResult.getDebugMessage() || "Unknow error",
+                                billingResult.getDebugMessage() || PurchaseErrorMessage.unknown,
                                 billingResult
                             ));
                         }
@@ -213,7 +213,7 @@ export class InAppPurchase extends InAppPurchaseBase {
                         } else {
                             reject(new PurchaseError(
                                 PurchaseErrorCode.unknown,
-                                billingResult.getDebugMessage() || "Unknow error",
+                                billingResult.getDebugMessage() || PurchaseErrorMessage.unknown,
                                 billingResult
                             ));
                         }
@@ -304,7 +304,7 @@ export class InAppPurchase extends InAppPurchaseBase {
                         } else {
                             reject(new PurchaseError(
                                 PurchaseErrorCode.unknown,
-                                billingResult.getDebugMessage() || "Unknow error",
+                                billingResult.getDebugMessage() || PurchaseErrorMessage.unknown,
                                 billingResult
                             ));
                         }

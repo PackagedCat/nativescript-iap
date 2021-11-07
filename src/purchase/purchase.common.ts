@@ -5,9 +5,17 @@ import { Product } from "../product/product";
 export enum PurchaseErrorCode {
     unknown = "unknown",
     canceled = "canceled",
-    itemAlreadyOwned = "item_already_owned",
-    itemUnavailable = "item_unavailable",
+    productAlreadyOwned = "product_already_owned",
+    productUnavailable = "product_not_available",
     userNotAuthorized = "user_not_authorized"
+}
+
+export enum PurchaseErrorMessage {
+    unknown = "Unknow error.",
+    canceled = "Canceled by the user.",
+    productAlreadyOwned = "The product not available.",
+    productUnavailable = "The product already onwed.",
+    userNotAuthorized = "The user not authorized."
 }
 
 export class PurchaseError extends Error {

@@ -57,7 +57,7 @@ nativeError: any
 
 Gets the native pruchase error object.
 
-On iOS: `NSError`
+On iOS: `SKError`
 
 On Android - `com.android.billingclient.api.BillingResult`
 </td>

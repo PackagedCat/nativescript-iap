@@ -49,23 +49,6 @@ A type of subscription products.
 <td>
 
 ```typescript
-failed: "failed"
-```
-</td>
-
-<td>
-
-A type of subscription products.
-</td>
-
-</tr>
-
-<!--  -->
-<tr>
-
-<td>
-
-```typescript
 restored: "restored"
 ```
 </td>

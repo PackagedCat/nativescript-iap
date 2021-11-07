@@ -16,65 +16,29 @@ export enum SubscriptionPeriod {
 export class ProductBase {
     public nativeObject: any;
 
-    protected _id!: string;
-    public get id() {
-        return this._id;
-    } 
+    public id!: string;
 
-    protected _iconUrl?: string;
-    public get iconUrl() {
-        return this._iconUrl;
-    } 
+    public iconUrl?: string;
 
-    protected _isDownloadable?: boolean;
-    public get isDownloadable() {
-        return this._isDownloadable;
-    } 
+    public isDownloadable?: boolean;
 
-    protected _isFamilyShareable?: boolean;
-    public get isFamilyShareable() {
-        return this._isFamilyShareable;
-    } 
+    public isFamilyShareable?: boolean;
 
-    protected _title!: string;
-    public get title() {
-        return this._title;
-    }
+    public title!: string;
 
-    protected _description!: string;
-    public get description() {
-        return this._description;
-    }
+    public description!: string;
 
-    protected _price!: number;
-    public get price() {
-        return this._price;
-    }
+    public price!: number;
 
-    protected _priceFormatted!: string;
-    public get priceFormatted() {
-        return this._priceFormatted;
-    }
+    public priceFormatted!: string;
 
-    protected _priceCurrencyCode!: string;
-    public get priceCurrencyCode() {
-        return this._priceCurrencyCode;
-    }
+    public priceCurrencyCode!: string;
 
-    protected _type!: ProductType;
-    public get type() {
-        return this._type;
-    }
+    public type!: ProductType;
 
-    protected _subscriptionGroupId?: string;
-    public get subscriptionGroupId() {
-        return this._subscriptionGroupId;
-    }
+    public subscriptionGroupId?: string;
 
-    protected _subscriptionPeriod?: SubscriptionPeriod;
-    public get subscriptionPeriod() {
-        return this._subscriptionPeriod;
-    }
+    public subscriptionPeriod?: SubscriptionPeriod;
     
     constructor(nativeObject: any) {
         this.nativeObject = nativeObject;

@@ -8,7 +8,7 @@
     },
     "scripts": {
         "clean": "git clean -f -X -d",
-        "build": "tsc -b -v && cd ./src && cpy ./**/*.d.ts ../package/ --parents",
+        "build": "tsc -b -v && cd ./src && cpy ./**/*.d.ts ../package/ --parents && cpy ../README.md ../package/",
         "setup": "npm run clean && npm install && ts-patch install"
     },
     "keywords": [
@@ -25,9 +25,10 @@
     "contributors": [],
     "license": "Apache-2.0",
     "devDependencies": {
-        "@nativescript/core": "^7.3.0",
-        "@nativescript/types": "^7.3.0",
-        "@nativescript/webpack": "^3.0.9",
+        "@nativescript/android": "^8.1.1",
+        "@nativescript/core": "^8.1.5",
+        "@nativescript/types": "^8.1.0",
+        "@nativescript/webpack": "^5.0.0",
         "@typescript-eslint/eslint-plugin": "^4.28.0",
         "@typescript-eslint/parser": "^4.28.0",
         "@vue/eslint-config-typescript": "^9.0.1",
@@ -36,6 +37,7 @@
         "eslint-plugin-vue": "^8.0.3",
         "ts-node": "^9.0.0",
         "ts-patch": "^1.3.3",
-        "typescript": "^4.4.4"
+        "typescript": "^4.4.4",
+        "xcode": "^0.9.3"
     }
 }

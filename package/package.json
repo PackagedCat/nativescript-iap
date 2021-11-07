@@ -1,47 +1,46 @@
 {
-  "name": "nativescript-iap",
-  "version": "8.0.0",
-  "description": "A NativeScript plugin for making in-app purchases",
-  "main": "index",
-  "typings": "index.d.ts",
-  "nativescript": {
-    "platforms": {
-      "android": "8.0.0",
-      "ios": "8.0.0"
+    "name": "nativescript-iap",
+    "version": "8.0.0",
+    "description": "A NativeScript plugin for making in-app purchases",
+    "main": "index",
+    "typings": "index.d.ts",
+    "nativescript": {
+        "platforms": {
+        "android": "8.0.0",
+        "ios": "8.0.0"
+        },
+        "hooks": [
+            {
+                "type": "after-prepare",
+                "script": "scripts/after-prepare.js"
+            }
+        ]
     },
-		"hooks": [
-			{
-				"type": "after-prepare",
-				"script": "scripts/after-prepare.js",
-				"inject": true
-			}
-		]
-  },
-	"scripts": {
-		"postinstall": "node postinstall-hooks.js",
-		"preuninstall": "node preuninstall.js"
-	},
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/PackagedCat/nativescript-iap"
-  },
-  "keywords": [
-    "NativeScript",
-    "iap",
-    "in-app purchase",
-    "in-app billing",
-    "payment",
-    "purchase",
-    "billing",
-    "subscription"
-  ],
-  "author": {
-    "name": "Shamsuddin Dzhamalov",
-    "email": "packagedcat@outlook.com"
-  },
-  "contributors": [],
-  "license": "Apache-2.0",
-	"dependencies": {
-		"xcode": "^0.9.3"
-	}
+    "scripts": {
+        "postinstall": "node postinstall.js",
+        "preuninstall": "node preuninstall.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/PackagedCat/nativescript-iap"
+    },
+    "keywords": [
+        "NativeScript",
+        "iap",
+        "in-app purchase",
+        "in-app billing",
+        "payment",
+        "purchase",
+        "billing",
+        "subscription"
+    ],
+    "author": {
+        "name": "Shamsuddin Dzhamalov",
+        "email": "packagedcat@outlook.com"
+    },
+    "contributors": [],
+    "license": "Apache-2.0",
+    "devDependencies": {
+        "xcode": "^0.9.3"
+    }
 }

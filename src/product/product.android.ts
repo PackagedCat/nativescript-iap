@@ -6,35 +6,35 @@ export class Product extends ProductBase {
     constructor(nativeObject: com.android.billingclient.api.SkuDetails) {
         super(nativeObject);
         
-        this._id = nativeObject.getSku();
-        this._iconUrl = nativeObject.getIconUrl();
-        this._description = nativeObject.getDescription();
-        this._title = nativeObject.getTitle();
-        this._price = nativeObject.getPriceAmountMicros() / 1000000;
-        this._priceFormatted = nativeObject.getPrice();
-        this._priceCurrencyCode = nativeObject.getPriceCurrencyCode();
+        this.id = nativeObject.getSku();
+        this.iconUrl = nativeObject.getIconUrl();
+        this.description = nativeObject.getDescription();
+        this.title = nativeObject.getTitle();
+        this.price = nativeObject.getPriceAmountMicros() / 1000000;
+        this.priceFormatted = nativeObject.getPrice();
+        this.priceCurrencyCode = nativeObject.getPriceCurrencyCode();
         
         switch (nativeObject.getSubscriptionPeriod()) {
             case "P1M":
-                this._subscriptionPeriod = SubscriptionPeriod.month;
+                this.subscriptionPeriod = SubscriptionPeriod.month;
                 break;
             case "P6M":
-                this._subscriptionPeriod = SubscriptionPeriod.sixMonth;
+                this.subscriptionPeriod = SubscriptionPeriod.sixMonth;
                 break;
             case "P3M":
-                this._subscriptionPeriod = SubscriptionPeriod.threeMonth;
+                this.subscriptionPeriod = SubscriptionPeriod.threeMonth;
                 break;
             case "P1W":
-                this._subscriptionPeriod = SubscriptionPeriod.week;
+                this.subscriptionPeriod = SubscriptionPeriod.week;
                 break;
             case "P3W":
-                this._subscriptionPeriod = SubscriptionPeriod.threeWeek;
+                this.subscriptionPeriod = SubscriptionPeriod.threeWeek;
                 break;
             case "P1Y":
-                this._subscriptionPeriod = SubscriptionPeriod.year;
+                this.subscriptionPeriod = SubscriptionPeriod.year;
                 break;
         }
 
-        this._type = nativeObject.getType() === "inapp" ? ProductType.inApp : ProductType.subs;
+        this.type = nativeObject.getType() === "inapp" ? ProductType.inApp : ProductType.subs;
     }
 }

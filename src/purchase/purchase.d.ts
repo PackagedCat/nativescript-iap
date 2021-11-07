@@ -17,14 +17,14 @@ export enum PurchaseErrorCode {
     canceled = "canceled",
 
     /**
-     * Android only: Failure to purchase since item is already owned.
+     * Failure to purchase since item is already owned.
      */
-    itemAlreadyOwned = "item_already_owned",
+     productAlreadyOwned = "product_already_owned",
 
     /**
      * Requested product is not available for purchase.
      */
-    itemUnavailable = "item_unavailable",
+    productUnavailable = "product_unavailable",
 
     /**
      * iOS only: The user is not allowed to authorize payments.

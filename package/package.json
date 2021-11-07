@@ -1,13 +1,13 @@
 {
   "name": "nativescript-iap",
-  "version": "7.0.7",
+  "version": "8.0.0",
   "description": "A NativeScript plugin for making in-app purchases",
   "main": "index",
   "typings": "index.d.ts",
   "nativescript": {
     "platforms": {
-      "android": "7.0.0",
-      "ios": "7.0.0"
+      "android": "8.0.0",
+      "ios": "8.0.0"
     },
 		"hooks": [
 			{

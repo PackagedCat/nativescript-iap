@@ -65,8 +65,8 @@ export class InAppPurchase extends InAppPurchaseBase {
                 break;
             case com.android.billingclient.api.BillingClient.BillingResponseCode.ITEM_UNAVAILABLE:
                 this._purchasePromiseReject?.(new PurchaseError(
-                    PurchaseErrorCode.productUnavailable,
-                    PurchaseErrorMessage.productUnavailable,
+                    PurchaseErrorCode.productNotAvailable,
+                    PurchaseErrorMessage.productNotAvailable,
                     billingResult
                 ));
                 break;

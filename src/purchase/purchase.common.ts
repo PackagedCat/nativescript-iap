@@ -6,7 +6,7 @@ export enum PurchaseErrorCode {
     unknown = "unknown",
     canceled = "canceled",
     productAlreadyOwned = "product_already_owned",
-    productUnavailable = "product_not_available",
+    productNotAvailable = "product_not_available",
     userNotAuthorized = "user_not_authorized"
 }
 

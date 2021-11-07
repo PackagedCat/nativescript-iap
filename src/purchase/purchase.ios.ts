@@ -58,8 +58,8 @@ class SKPaymentTransactionObserverImpl extends NSObject implements SKPaymentTran
                         break;
                     case SKErrorCode.StoreProductNotAvailable:
                         owner.rejectCurrentProcces(new PurchaseError(
-                            PurchaseErrorCode.productUnavailable,
-                            PurchaseErrorMessage.productUnavailable,
+                            PurchaseErrorCode.productNotAvailable,
+                            PurchaseErrorMessage.productNotAvailable,
                             nativeTransaction.error
                         ));
                         break;

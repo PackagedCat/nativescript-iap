@@ -70,7 +70,7 @@ try {
                 case PurchaseErrorCode.productAlreadyOwned:
                     // ...
                     break;
-                case PurchaseErrorCode.productUnavailable:
+                case PurchaseErrorCode.productNotAvailable:
                     // ...
                     break;
                 case PurchaseErrorCode.userNotAuthorized: // On iOS only

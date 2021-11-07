@@ -14,7 +14,7 @@ export enum PurchaseErrorMessage {
     unknown = "Unknow error.",
     canceled = "Canceled by the user.",
     productAlreadyOwned = "The product not available.",
-    productUnavailable = "The product already onwed.",
+    productNotAvailable = "The product already onwed.",
     userNotAuthorized = "The user not authorized."
 }
 

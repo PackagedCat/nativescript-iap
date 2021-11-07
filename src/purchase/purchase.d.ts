@@ -24,7 +24,7 @@ export enum PurchaseErrorCode {
     /**
      * Requested product is not available for purchase.
      */
-    productUnavailable = "product_unavailable",
+    productNotAvailable = "product_not_available",
 
     /**
      * iOS only: The user is not allowed to authorize payments.

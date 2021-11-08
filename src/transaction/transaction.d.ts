@@ -19,7 +19,7 @@ export class Transaction {
     /**
      * Gets the product ID.
      */
-    public productId: string[];
+    public productId: string;
 
     /**
      * Gets the quantity of the purchased product.

@@ -161,12 +161,10 @@ export class InAppPurchase extends InAppPurchaseBase {
 
     //#endregion
 
-    public finishTransaction(transaction: Transaction): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
-            this.connectAsync()
-                .then(resolve)
-                .catch(reject);
+    public async finishTransaction(transaction: Transaction): Promise<void> {
+        await this.connectAsync();
 
+        return new Promise<void>((resolve, reject) => {
             if (transaction.state === TransactionState.restored) {
                 resolve();
                 return;
@@ -194,12 +192,10 @@ export class InAppPurchase extends InAppPurchaseBase {
         });
     }
 
-    public consumePurchase(transaction: Transaction): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
-            this.connectAsync()
-                .then(resolve)
-                .catch(reject);
+    public async consumePurchase(transaction: Transaction): Promise<void> {
+        await this.connectAsync();
 
+        return new Promise<void>((resolve, reject) => {
             const consumeParams = com.android.billingclient.api.ConsumeParams.newBuilder()
                 .setPurchaseToken(transaction.nativeObject.getPurchaseToken())
                 .build();
@@ -240,11 +236,10 @@ export class InAppPurchase extends InAppPurchaseBase {
         return products;
     }
 
-    public purchase(product: Product): Promise<void> {
+    public async purchase(product: Product): Promise<void> {
+        await this.connectAsync();
+
         return new Promise<void>((resolve, reject) => {
-            this.connectAsync()
-                .then(resolve)
-                .catch(reject);
 
             this._purchasePromiseResolve = resolve;
             this._purchasePromiseReject = reject;
@@ -280,12 +275,10 @@ export class InAppPurchase extends InAppPurchaseBase {
         });
     }
 
-    public showPriceConsent(product?: Product): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
-            this.connectAsync()
-                .then(resolve)
-                .catch(reject);
-    
+    public async showPriceConsent(product?: Product): Promise<void> {
+        await this.connectAsync();
+
+        return new Promise<void>((resolve, reject) => {    
             if (product == null) {
                 reject("The parameter \"product\" must not be null.");
                 return;

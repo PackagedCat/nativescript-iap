@@ -25,19 +25,18 @@
     "contributors": [],
     "license": "Apache-2.0",
     "devDependencies": {
-        "@nativescript/android": "^8.1.1",
         "@nativescript/core": "^8.1.5",
-        "@nativescript/types": "^8.1.0",
-        "@nativescript/webpack": "^5.0.0",
-        "@typescript-eslint/eslint-plugin": "^4.28.0",
-        "@typescript-eslint/parser": "^4.28.0",
-        "@vue/eslint-config-typescript": "^9.0.1",
+        "@nativescript/types": "^8.1.1",
+        "@nativescript/webpack": "^5.0.1",
+        "@typescript-eslint/eslint-plugin": "^5.4.0",
+        "@typescript-eslint/parser": "^5.4.0",
+        "@vue/eslint-config-typescript": "^9.1.0",
         "cpy-cli": "^3.1.1",
-        "eslint": "^7.32.0",
-        "eslint-plugin-vue": "^8.0.3",
-        "ts-node": "^9.0.0",
-        "ts-patch": "^1.3.3",
-        "typescript": "^4.4.4",
-        "xcode": "^0.9.3"
+        "eslint": "^8.2.0",
+        "eslint-plugin-vue": "^8.1.1",
+        "ts-node": "^10.4.0",
+        "ts-patch": "^2.0.1",
+        "typescript": "^4.5.2",
+        "xcode": "^3.0.1"
     }
 }

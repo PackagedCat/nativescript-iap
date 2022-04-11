@@ -9,7 +9,7 @@ const context = Utils.ad.getApplicationContext();
 
 export class InAppPurchase extends InAppPurchaseBase {
     public nativeObject: com.android.billingclient.api.BillingClient;
-    
+
     private _purchasePromiseResolve?: (value: void | PromiseLike<void>) => void;
     private _purchasePromiseReject?: (reason?: any) => void;
 
@@ -26,7 +26,7 @@ export class InAppPurchase extends InAppPurchaseBase {
             .build();
     }
 
-    //#region Native methods
+    // #region Native methods
 
     private async onNativePurchasesUpdated(billingResult: com.android.billingclient.api.BillingResult, purchases: java.util.List<com.android.billingclient.api.Purchase>) {
         switch (billingResult.getResponseCode()) {
@@ -34,14 +34,14 @@ export class InAppPurchase extends InAppPurchaseBase {
                 if (purchases != null) {
                     const nativeTransactions = purchases.toArray();
                     const transactions = new Array<Transaction>();
-        
+
                     for (let i = 0; i < nativeTransactions.length; i++) {
                         const transaction = new Transaction(nativeTransactions[i]);
                         transactions.push(transaction);
                     }
-        
+
                     this._purchasePromiseResolve?.();
-        
+
                     this.notify({
                         eventName: InAppPurchase.purchaseUpdatedEvent,
                         object: this,
@@ -124,7 +124,7 @@ export class InAppPurchase extends InAppPurchaseBase {
                 new com.android.billingclient.api.SkuDetailsResponseListener({
                     onSkuDetailsResponse(billingResult, skuDetailsList) {
                         if (billingResult.getResponseCode() === com.android.billingclient.api.BillingClient.BillingResponseCode.OK) {
-                            const nativeProducts = skuDetailsList.toArray();                            
+                            const nativeProducts = skuDetailsList.toArray();
                             resolve(nativeProducts);
                         } else {
                             reject(new PurchaseError(
@@ -145,7 +145,7 @@ export class InAppPurchase extends InAppPurchaseBase {
                 new com.android.billingclient.api.PurchaseHistoryResponseListener({
                     onPurchaseHistoryResponse(billingResult, purchaseHistoryRecordList) {
                         if (billingResult.getResponseCode() === com.android.billingclient.api.BillingClient.BillingResponseCode.OK) {
-                            const nativeHistory = purchaseHistoryRecordList.toArray();                            
+                            const nativeHistory = purchaseHistoryRecordList.toArray();
                             resolve(nativeHistory);
                         } else {
                             reject(new PurchaseError(
@@ -159,7 +159,7 @@ export class InAppPurchase extends InAppPurchaseBase {
         });
     }
 
-    //#endregion
+    // #endregion
 
     public async finishTransaction(transaction: Transaction): Promise<void> {
         await this.connectAsync();
@@ -240,14 +240,13 @@ export class InAppPurchase extends InAppPurchaseBase {
         await this.connectAsync();
 
         return new Promise<void>((resolve, reject) => {
-
             this._purchasePromiseResolve = resolve;
             this._purchasePromiseReject = reject;
 
             const billingFlowParams = com.android.billingclient.api.BillingFlowParams.newBuilder()
                 .setSkuDetails(product.nativeObject)
                 .build();
-    
+
             const activity = Application.android.foregroundActivity || Application.android.startActivity;
             this.nativeObject.launchBillingFlow(activity, billingFlowParams);
         });
@@ -262,7 +261,7 @@ export class InAppPurchase extends InAppPurchaseBase {
         for (let i = 0; i < nativeTransactions.length; i++) {
             transactions.push(new Transaction(nativeTransactions[i]));
         }
-        
+
         nativeTransactions = await this.getNativePurchaseHistory(com.android.billingclient.api.BillingClient.SkuType.SUBS);
         for (let i = 0; i < nativeTransactions.length; i++) {
             transactions.push(new Transaction(nativeTransactions[i]));
@@ -278,9 +277,9 @@ export class InAppPurchase extends InAppPurchaseBase {
     public async showPriceConsent(product?: Product): Promise<void> {
         await this.connectAsync();
 
-        return new Promise<void>((resolve, reject) => {    
+        return new Promise<void>((resolve, reject) => {
             if (product == null) {
-                reject("The parameter \"product\" must not be null.");
+                reject(new Error("The parameter \"product\" must not be null."));
                 return;
             }
 

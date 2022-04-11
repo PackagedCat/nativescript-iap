@@ -21,8 +21,8 @@ export class Transaction extends TransactionBase<com.android.billingclient.api.P
                     break;
             }
         }
-        
+
         this.productId = this.nativeObject.getSkus().get(0);
         this.quantity = nativeObject.getQuantity();
     }
-} 
+}

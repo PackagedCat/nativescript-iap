@@ -33,6 +33,7 @@
         "@nativescript/webpack": "^5.0.6",
         "@typescript-eslint/eslint-plugin": "^5.19.0",
         "@typescript-eslint/parser": "^5.19.0",
+        "@vue/eslint-config-standard": "^6.1.0",
         "@vue/eslint-config-typescript": "^10.0.0",
         "cpy-cli": "^4.1.0",
         "eslint": "^8.13.0",

@@ -5,7 +5,7 @@ export * from "./product.common";
 export class Product extends ProductBase {
     constructor(nativeObject: com.android.billingclient.api.SkuDetails) {
         super(nativeObject);
-        
+
         this.id = nativeObject.getSku();
         this.iconUrl = nativeObject.getIconUrl();
         this.description = nativeObject.getDescription();
@@ -13,7 +13,7 @@ export class Product extends ProductBase {
         this.price = nativeObject.getPriceAmountMicros() / 1000000;
         this.priceFormatted = nativeObject.getPrice();
         this.priceCurrencyCode = nativeObject.getPriceCurrencyCode();
-        
+
         switch (nativeObject.getSubscriptionPeriod()) {
             case "P1M":
                 this.subscriptionPeriod = SubscriptionPeriod.month;

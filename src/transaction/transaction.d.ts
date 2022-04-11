@@ -33,9 +33,9 @@ export class Transaction {
  * Represents the states of transaction.
  */
 export enum TransactionState {
-	purchasing = "purchasing",
-	purchased = "purchased",
-	restored = "restored",
-	deferred = "deferred",
+    purchasing = "purchasing",
+    purchased = "purchased",
+    restored = "restored",
+    deferred = "deferred",
     refunded = "refunded"
 }

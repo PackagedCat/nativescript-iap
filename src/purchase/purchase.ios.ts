@@ -127,10 +127,10 @@ class SKProductsRequestDelegateImpl extends NSObject implements SKProductsReques
 
 export class InAppPurchase extends InAppPurchaseBase {
     public nativeObject: SKPaymentQueue;
-    
+
     private _transactionObserver: SKPaymentTransactionObserverImpl;
     private _isCanMakePayment = false;
-    
+
     private _currentProccessPromiseResolve?: (value: any | PromiseLike<any>) => void;
     private _currentProccessPromiseReject?: (reason?: any) => void;
 
@@ -172,7 +172,7 @@ export class InAppPurchase extends InAppPurchaseBase {
         }
 
         if (SKPaymentQueue.canMakePayments()) {
-            return this._isCanMakePayment = true;
+            this._isCanMakePayment = true;
         } else {
             throw new PurchaseError(
                 PurchaseErrorCode.userNotAuthorized,
@@ -190,7 +190,7 @@ export class InAppPurchase extends InAppPurchaseBase {
         return new Promise((resolve, reject) => {
             this.setCurrentProccessPromise(resolve, reject);
             this.checkAuthorization();
-    
+
             this.nativeObject.finishTransaction(transaction.nativeObject);
         });
     }

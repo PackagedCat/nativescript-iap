@@ -108,11 +108,19 @@ await inAppPurchase.consumePurchase(transaction);
 ```typescript
 import inAppPurchase from "nativescript-iap";
 
-// Gettings the product with updated price
-
 const products = await inAppPurchase.getProducts(["product_id_with_updated_price"]);
 
 await inAppPurchase.showPriceConsent(product[0]);
+```
+
+### (iOS only) Listen for revoked family-shared purchases.
+
+```typescript
+import inAppPurchase from "nativescript-iap";
+
+inAppPurchase.on("productsRevoked", async (data: ProductsRevokedEventData) => {
+    // Notfy user
+});
 ```
 
 ## API

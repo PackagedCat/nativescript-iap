@@ -1,23 +1,42 @@
 {
+    "parser": "vue-eslint-parser",
     "env": {
         "node": true
     },
     "extends": [
-        "plugin:vue/essential",
         "plugin:vue/recommended",
+        "@vue/standard",
         "@vue/typescript/recommended"
     ],
     "parserOptions": {
-        "ecmaVersion": 2020
+        "ecmaVersion": 2020,
+        "parser": "@typescript-eslint/parser"
     },
     "rules": {
-        "@typescript-eslint/explicit-module-boundary-types": "off",
         "@typescript-eslint/no-explicit-any": "off",
         "@typescript-eslint/no-non-null-assertion": "off",
+        "@typescript-eslint/explicit-module-boundary-types": "off",
+        "no-undef": "off",
+        "no-use-before-define": "off",
+        "space-before-function-paren": "off",
         "vue/attribute-hyphenation": "off",
+        "vue/component-name-in-template-casing": [
+            "error",
+            "kebab-case",
+            {
+                "registeredComponentsOnly": false
+            }
+        ],
         "vue/html-indent": [
             "error",
             4
+        ],
+        "vue/script-indent": [
+            "error",
+            4,
+            {
+                "switchCase": 1
+            }
         ],
         "semi": [
             2,

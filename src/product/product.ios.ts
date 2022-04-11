@@ -37,8 +37,7 @@ export class Product extends ProductBase {
                     break;
             }
             this.type = ProductType.subs;
-        }
-        else {
+        } else {
             this.type = ProductType.inApp;
         }
     }

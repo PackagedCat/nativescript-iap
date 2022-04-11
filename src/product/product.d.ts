@@ -65,7 +65,7 @@ export class Product {
      * Android only: Gets the icon of the product if present.
      */
     public iconUrl?: string;
-    
+
     /**
      * iOS only: Gets a value that indicates
      * whether the App Store has downloadable content for this product.
@@ -117,6 +117,6 @@ export class Product {
      * Gets the product type (in app or subscription).
      */
     public type: ProductType;
-    
+
     constructor(nativeValue: any);
 }

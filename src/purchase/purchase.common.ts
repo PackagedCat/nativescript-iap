@@ -33,8 +33,13 @@ export interface PurchaseEventData extends EventData {
     transactions: Transaction[];
 }
 
+export interface ProductsRevokedEventData extends EventData {
+    productIds: string[];
+}
+
 export abstract class InAppPurchaseBase extends Observable {
     public static purchaseUpdatedEvent = "purchaseUpdated";
+    public static productsRevokedEvent = "productsRevoked";
 
     public abstract nativeObject: any;
 

@@ -39,7 +39,7 @@ export class ProductBase {
     public subscriptionGroupId?: string;
 
     public subscriptionPeriod?: SubscriptionPeriod;
-    
+
     constructor(nativeObject: any) {
         this.nativeObject = nativeObject;
     }

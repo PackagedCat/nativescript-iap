@@ -1,65 +1,65 @@
 <template>
-    <Page>
-        <ActionBar title="Product list" />
-        <GridLayout
+    <page>
+        <action-bar title="Product list" />
+        <grid-layout
             rows="*,auto"
         >
-            <ListView
+            <list-view
                 for="item in items"
                 @itemTap="onItemTap"
             >
                 <v-template>
-                    <StackLayout padding="20,10">
-                        <Label
+                    <stack-layout padding="20,10">
+                        <label
                             textWrap="true"
                             :text="item.title"
                         />
-                        <Label
+                        <label
                             class="footnote"
                             textWrap="true"
                             :text="item.id"
                         />
-                        <Label
+                        <label
                             class="footnote"
                             textWrap="true"
                             :text="item.description"
                         />
-                    </StackLayout>
+                    </stack-layout>
                 </v-template>
-            </ListView>
+            </list-view>
 
-            <StackLayout
+            <stack-layout
                 row="1"
             >
                 <button
                     text="Restore purchases"
                     @tap="onRestorePurchasesTap"
                 />
-            </StackLayout>
+            </stack-layout>
 
-            <GridLayout
+            <grid-layout
                 v-if="isLoading"
                 rowSpan="2"
                 backgroundColor="#00000030"
             >
-                <StackLayout
+                <stack-layout
                     horizontalAlignment="center"
                     verticalAlignment="center"
                 >
-                    <ActivityIndicator
+                    <activity-indicator
                         width="100"
                         height="100"
                         :busy="isLoading"
                     />
-                    <Label
+                    <label
                         marginTop="10"
                         horizontalAlignment="center"
                         text="Loading..."
                     />
-                </StackLayout>
-            </GridLayout>
-        </GridLayout>
-    </Page>
+                </stack-layout>
+            </grid-layout>
+        </grid-layout>
+    </page>
 </template>
 
 <script lang="ts">
@@ -117,7 +117,7 @@ export default Vue.extend({
                         case PurchaseErrorCode.userNotAuthorized: // On iOS only
                             // ...
                             break;
-                        default: //Unknow error
+                        default: // Unknow error
                             // ...
                             break;
                     }

@@ -18,16 +18,13 @@ All purchases require finish, regardless of whether it succeeded or failed Failu
 
 <br/>
 
-### consumePurchase
+### consumePurchase (Android only)
 
 ```typescript
 consumePurchase(transaction: Transaction): Promise<void>
 ```
 
-Android only: Consumes the purchase represented by the given transaction.
-
-Resolves if `getResponseCode() === BillingResponseCode.OK`
-else it rejects with an Object: `{ code: Number, error: String }`.
+Consumes the purchase represented by the given transaction.
 
 <br/>
 
@@ -87,3 +84,11 @@ on(eventName: "purchaseUpdated", callback: (data: PurchaseEventData) => void, th
 ```
 
 Triggered a buy/restore transaction changes its state. You receive a Transaction object where you can check the status and other properties of the transaction. 
+
+### productsRevoked (iOS only)
+
+```typescript
+on(eventName: "productsRevoked", callback: (data: ProductsRevokedEventData) => void, thisArg?: any)
+```
+
+Tells an observer that the user is no longer entitled to one or more family-shared purchases.

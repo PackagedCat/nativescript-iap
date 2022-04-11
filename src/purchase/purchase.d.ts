@@ -43,6 +43,10 @@ export interface PurchaseEventData extends EventData {
     transactions: Transaction[];
 }
 
+export interface ProductsRevokedEventData extends EventData {
+    productIds: string[];
+}
+
 export class InAppPurchase extends Observable {
     public nativeObject: any;
 
@@ -56,10 +60,10 @@ export class InAppPurchase extends Observable {
     /**
      * Notifies the store that the app finished processing the transaction.
      * @param transaction The transaction to finish.
-     * 
+     *
      * @summary
      * All purchases require finish, regardless of whether it succeeded or failed.
-     * Failure to complete a succeeded purchase will result in that purchase being refunded. 
+     * Failure to complete a succeeded purchase will result in that purchase being refunded.
      */
     public finishTransaction(transaction: Transaction): Promise<void>;
 
@@ -77,10 +81,10 @@ export class InAppPurchase extends Observable {
 
     /**
      * Restores previously completed purchases.
-     * 
+     *
      * @summary
      * Use this method to restore completed transactions that is,
-     * transactions for which you have already called completePuchase. 
+     * transactions for which you have already called completePuchase.
      * Not restoring a non-renewing subscription or a consumable product.
      */
     public restorePurchases(): Promise<void>;
@@ -93,6 +97,7 @@ export class InAppPurchase extends Observable {
 
     public on(eventNames: string, callback: (data: EventData) => void, thisArg?: any);
     public on(eventName: "purchaseUpdated", callback: (data: PurchaseEventData) => void, thisArg?: any);
+    public on(eventName: "productsRevoked", callback: (data: ProductsRevokedEventData) => void, thisArg?: any);
 }
 
 declare const inAppPurchase: InAppPurchase;

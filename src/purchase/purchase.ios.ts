@@ -1,4 +1,4 @@
-import { InAppPurchaseBase, PurchaseError, PurchaseErrorCode, PurchaseErrorMessage, PurchaseEventData } from "./purchase.common";
+import { InAppPurchaseBase, ProductsRevokedEventData, PurchaseError, PurchaseErrorCode, PurchaseErrorMessage, PurchaseEventData } from "./purchase.common";
 import { Product } from "../product/product";
 import { Transaction } from "../transaction/transaction";
 
@@ -14,6 +14,19 @@ class SKPaymentTransactionObserverImpl extends NSObject implements SKPaymentTran
         const observer = <SKPaymentTransactionObserverImpl>SKPaymentTransactionObserverImpl.new();
         observer._owner = new WeakRef<InAppPurchase>(owner);
         return observer;
+    }
+
+    public paymentQueueDidRevokeEntitlementsForProductIdentifiers(queue: SKPaymentQueue, productIdentifiers: string[]): void {
+        const owner = this._owner.get();
+        if (owner == null) {
+            return;
+        }
+
+        owner.notify<ProductsRevokedEventData>({
+            eventName: InAppPurchase.productsRevokedEvent,
+            object: owner,
+            productIds: productIdentifiers
+        });
     }
 
     public paymentQueueRestoreCompletedTransactionsFailedWithError(queue: SKPaymentQueue, error: NSError): void {

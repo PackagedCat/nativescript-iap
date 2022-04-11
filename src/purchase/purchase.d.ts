@@ -43,6 +43,10 @@ export interface PurchaseEventData extends EventData {
     transactions: Transaction[];
 }
 
+export interface ProductsRevokedEventData extends EventData {
+    productIds: string[];
+}
+
 export class InAppPurchase extends Observable {
     public nativeObject: any;
 
@@ -93,6 +97,7 @@ export class InAppPurchase extends Observable {
 
     public on(eventNames: string, callback: (data: EventData) => void, thisArg?: any);
     public on(eventName: "purchaseUpdated", callback: (data: PurchaseEventData) => void, thisArg?: any);
+    public on(eventName: "productsRevoked", callback: (data: ProductsRevokedEventData) => void, thisArg?: any);
 }
 
 declare const inAppPurchase: InAppPurchase;

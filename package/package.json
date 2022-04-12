@@ -1,24 +1,25 @@
 {
     "name": "nativescript-iap",
-    "version": "8.0.4",
+    "version": "8.0.5",
     "description": "A NativeScript plugin for making in-app purchases",
     "main": "index",
     "typings": "index.d.ts",
     "nativescript": {
         "platforms": {
-        "android": "8.0.0",
-        "ios": "8.0.0"
+            "android": "8.0.0",
+            "ios": "8.0.0"
         },
         "hooks": [
             {
                 "type": "after-prepare",
-                "script": "scripts/after-prepare.js"
+                "script": "scripts/after-prepare.js",
+                "inject": true
             }
         ]
     },
     "scripts": {
-        "postinstall": "node postinstall.js",
-        "preuninstall": "node preuninstall.js"
+        "postinstall": "node scripts/postinstall.js",
+        "preuninstall": "node scripts/preuninstall.js"
     },
     "repository": {
         "type": "git",
@@ -40,7 +41,7 @@
     },
     "contributors": [],
     "license": "Apache-2.0",
-    "devDependencies": {
-        "xcode": "^0.9.3"
+    "dependencies": {
+        "xcode": "^3.0.1"
     }
 }

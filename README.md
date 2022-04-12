@@ -119,7 +119,9 @@ await inAppPurchase.showPriceConsent(product[0]);
 import inAppPurchase from "nativescript-iap";
 
 inAppPurchase.on("productsRevoked", async (data: ProductsRevokedEventData) => {
-    // Notfy user
+    data.productIds.foreach((productId) => {
+        // Notify user
+    });
 });
 ```
 

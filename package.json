@@ -1,6 +1,6 @@
 {
     "name": "nativescript-iap",
-    "version": "8.0.5",
+    "version": "8.0.7",
     "description": "A NativeScript plugin for making in-app purchases",
     "repository": {
         "type": "git",
@@ -8,8 +8,8 @@
     },
     "scripts": {
         "clean": "git clean -f -X -d",
-        "build": "tsc -b -v && cd ./src && cpy ./**/*.d.ts ../package/ --parents && cpy ../README.md ../package/",
-        "setup": "npm run clean && npm install && ts-patch install"
+        "build": "tsc -b -v && cd ./src && cpy ./**/*.d.ts ../package/ --parents && cpy ../README.md ../package/README.md",
+        "setup": "npm run clean && npm install --force && ts-patch install"
     },
     "keywords": [
         "NativeScript",

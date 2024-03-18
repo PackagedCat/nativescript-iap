@@ -17,7 +17,7 @@ In order for your in-app purchases to be recognized by the plugin, you must conf
 Before starting purchase you need hook up to the `purchaseUpdated` event. This way you will receive information about the transaction state while it is executing and take necessary action when the transaction completes. You can set the hook once as global handler to process the all incoming purchases.
 
 ```typescript
-import inAppPurchase, { PurchaseEventData } from "nativescript-iap";
+import inAppPurchase, { PurchaseEventData, TransactionState } from "nativescript-iap";
 
 inAppPurchase.on("purchaseUpdated", async (data: PurchaseEventData) => {
     for (const transaction of data.transactions) {
